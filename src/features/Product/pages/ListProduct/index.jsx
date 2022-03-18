@@ -1,0 +1,666 @@
+import React, { useState, useEffect, useRef } from "react";
+import BreadCrumb from "components/BreadCrumb";
+import Aside from "components/Aside";
+import { Link } from "react-router-dom";
+import { getAllProduct } from "api/productApi";
+import { formatCurrency } from "app/format";
+import Pagination from "react-js-pagination";
+import { useHistory, useParams } from "react-router";
+import { useLocation } from "react-router-dom";
+import { addToCard } from "features/Cart/cartSlice";
+import { useDispatch } from "react-redux";
+import { getSettingById } from "api/settingApi";
+import qs from "qs";
+import { Modal } from "react-responsive-modal";
+import "react-responsive-modal/styles.css";
+import Slider from "react-slick";
+///===================== doan code cua Modal
+function ImageInSlider({ picture, handleChangeImage }) {
+  return (
+    <div class="owl-item" style={{ width: "108px" }}>
+      <div class="image-additional">
+        <a
+          style={{ cursor: "pointer" }}
+          onClick={() => {
+            handleChangeImage(picture);
+          }}
+        >
+          <img
+            src={`${picture.source}`}
+            alt={picture._id}
+            width="80"
+            height="80"
+          />
+        </a>
+      </div>
+    </div>
+  );
+}
+//===================
+function ListProduct() {
+  const slideRef = useRef();
+  const [productList, setProductList] = useState([]);
+  const params = useParams();
+  const history = useHistory();
+  const location = useLocation();
+  const [filter, setFilter] = useState({
+    pageNo: 1,
+    pageSize: 12,
+  });
+  const [total, setTotal] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
+  const onPageChange = (page) => {
+    setFilter({ ...filter, pageNo: page });
+  };
+
+  const handleSelect = (e) => {
+    setFilter({ ...filter, sort: e.target.value });
+  };
+
+  const onFilterPrice = (value) => {
+    console.log(value);
+    if (value.length == 3 || value.length == 0) {
+      setFilter({
+        ...filter,
+        filter: {
+          DonGia: {
+            $gte: 0,
+          },
+        },
+        pageNo: 1,
+      });
+    } else if (value.length == 2) {
+      let filterPrice = {
+        $or: [],
+      };
+      if (value.indexOf(1) > -1) {
+        filterPrice["$or"].push({
+          DonGia: {
+            $gte: 0,
+            $lte: 100000,
+          },
+        });
+      }
+      if (value.indexOf(2) > -1) {
+        filterPrice["$or"].push({
+          DonGia: {
+            $gte: 100000,
+            $lte: 200000,
+          },
+        });
+      }
+      if (value.indexOf(3) > -1) {
+        filterPrice["$or"].push({
+          DonGia: {
+            $gte: 200000,
+          },
+        });
+      }
+      setFilter({
+        ...filter,
+        filter: filterPrice,
+        pageNo: 1,
+      });
+      console.log(filterPrice, "2");
+    } else if (value.length == 1) {
+      let filterPrice = {};
+      if (value.indexOf(1) > -1) {
+        filterPrice = {
+          DonGia: {
+            $gte: 0,
+            $lte: 100000,
+          },
+        };
+      }
+      if (value.indexOf(2) > -1) {
+        filterPrice = {
+          DonGia: {
+            $gte: 100000,
+            $lte: 200000,
+          },
+        };
+      }
+      if (value.indexOf(3) > -1) {
+        filterPrice = {
+          DonGia: {
+            $gte: 200000,
+          },
+        };
+      }
+      setFilter({
+        ...filter,
+        filter: filterPrice,
+        pageNo: 1,
+      });
+      console.log(filterPrice, "1");
+    }
+  };
+  const [pictures, setPictures] = useState([]);
+  const [currentPic, setCurrentPic] = useState({});
+  const [open, setOpen] = useState(false);
+  const [currentProduct, setCurrentProduct] = useState(null);
+  const onCategoryChange = (value) => {
+    setFilter({ ...filter, DanhMucSP: value });
+  };
+  useEffect(() => {
+    setFilter({
+      ...filter,
+      ...qs.parse(window.location.search.substring(1), {
+        decoder(str, decoder, charset) {
+          const strWithoutPlus = str.replace(/\+/g, " ");
+          if (charset === "iso-8859-1") {
+            // unescape never throws, no try...catch needed:
+            return strWithoutPlus.replace(/%[0-9a-f]{2}/gi, unescape);
+          }
+
+          if (/^(\d+|\d*\.\d+)$/.test(str)) {
+            return parseFloat(str);
+          }
+
+          const keywords = {
+            true: true,
+            false: false,
+            null: null,
+            undefined,
+          };
+          if (str in keywords) {
+            return keywords[str];
+          }
+
+          // utf-8
+          try {
+            return decodeURIComponent(strWithoutPlus);
+          } catch (e) {
+            return strWithoutPlus;
+          }
+        },
+      }),
+    });
+  }, []);
+  //------------------modal
+  useEffect(() => {
+   const fetch = async () => {
+    const urlDecode = qs.parse(window.location.search.substring(1), {
+      decoder(str, decoder, charset) {
+        const strWithoutPlus = str.replace(/\+/g, " ");
+        if (charset === "iso-8859-1") {
+          // unescape never throws, no try...catch needed:
+          return strWithoutPlus.replace(/%[0-9a-f]{2}/gi, unescape);
+        }
+
+        if (/^(\d+|\d*\.\d+)$/.test(str)) {
+          return parseFloat(str);
+        }
+
+        const keywords = {
+          true: true,
+          false: false,
+          null: null,
+          undefined,
+        };
+        if (str in keywords) {
+          return keywords[str];
+        }
+
+        // utf-8
+        try {
+          return decodeURIComponent(strWithoutPlus);
+        } catch (e) {
+          return strWithoutPlus;
+        }
+      },
+    });
+    const response = await getAllProduct({ ...filter, ...urlDecode });
+    setProductList(response.result.data);
+    setTotal(response.result.totalPage);
+    setTotalCount(response.result.totalCount);
+   }
+   fetch()
+  },[location])
+  useEffect(() => {
+    const fetchProductList = async () => {
+      try {
+        let searchStr = "";
+        searchStr = qs.stringify({ ...filter });
+        await history.push({
+          pathname: "/products",
+          search: searchStr,
+        });
+        
+      } catch (error) {
+        console.log("Failed to fetch product list: ", error);
+      }
+    };
+
+    fetchProductList();
+  }, [filter]);
+
+  //=========add to cart
+  const dispatch = useDispatch();
+  const handleAddToCart = (product) => {
+    if(product.SoLuong>0){
+      dispatch(addToCard({ ...product, quantity: amount }));
+      history.push("/cart");
+    }
+    
+  };
+  //=============code cho modal
+
+  const handleModal = (value) => {
+    setCurrentProduct(value);
+    setPictures(value.AnhMoTa);
+    setCurrentPic(value.AnhMoTa[0]);
+    setOpen(true);
+  };
+  const onOpenModal = () => setOpen(true);
+  const onCloseModal = () => setOpen(false);
+
+  const [amount, setAmount] = useState(1);
+
+  const handleAmount = (number) => {
+    if (number > 0 && amount < currentProduct.SoLuong) {
+      setAmount((prev) => prev + number);
+    }
+    if (number < 0 && amount > 1) {
+      setAmount((prev) => prev + number);
+    }
+  };
+
+  const handleChangeImage = (picture) => {
+    setCurrentPic(picture);
+  };
+  //----------------------
+  //============= goi settings cho banner
+  const [settings, setSettings] = useState([]);
+
+  useEffect(() => {
+      const fetchSetting = async () => {
+        const data = await getSettingById('setting-banner-product');
+        if(data && data.data && data.data.value)
+          setSettings(data.data.value);
+      };
+      fetchSetting();
+    },[]);
+
+  //==============================
+
+  return (
+    <div className="list-foods-main">
+      {/* Thanh định hướng breadcrumb */}
+
+      <div className="container">
+        <BreadCrumb currentPage="Food" />
+      </div>
+
+      {/* thanh aside bên trái và list foods */}
+      <div className="container">
+        <div className="row">
+          <aside id="column-left" className="col-sm-3">
+            <Aside
+              filter={true}
+              onFilterPrice={onFilterPrice}
+              handleChange={onCategoryChange}
+            />
+          </aside>
+          <div id="content" className="col-sm-9">
+            {/* big banner */}
+            <div className="row">
+              <div className="col-sm-12">
+                <img
+                  src={settings}
+                  alt="Shop"
+                  title="Shop"
+                  className="img-thumbnail cat-banner"
+                />
+              </div>
+            </div>
+
+            {/* thanh sort */}
+            <div className="row ">
+              <div className="col-sm-12 mb-6">
+                <div className="cat-info">
+                  <div className="cat-sort justify-end">
+                    <label
+                      className="control-label text_sort"
+                      htmlFor="input-sort"
+                    >
+                      Sort By:
+                    </label>
+                    <div className="clearfix" style={{ marginLeft: "10px" }}>
+                      <div className="select-filter-sort">
+                        <select
+                          id="input-sort"
+                          className="form-control sort-order"
+                          value={filter.sort ? filter.sort : "default"}
+                          onChange={handleSelect}
+                        >
+                          <option value="_id">Default</option>
+                          <option value="TenSanPham">Name (A - Z)</option>
+                          <option value="-TenSanPham">Name (Z - A)</option>
+                          <option value="DonGia">Price (Low &gt; High)</option>
+                          <option value="-DonGia">Price (High &gt; Low)</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* list sản phẩm */}
+            <div className="row category-row">
+              {productList.map(function (product) {
+                return (
+                  <div
+                    className="product-layout product-grid col-lg-4 col-md-4 col-sm-4 col-xs-6"
+                    key={product._id}
+                  >
+                    <div className="product-thumb transition clearfix">
+                      <div className="image">
+                        <Link to={`/products/${product.slug}`}>
+                          <img
+                            src={`${product.AnhMoTa[0].source}`}
+                            alt={product.TenSanPham}
+                            title={product.TenSanPham}
+                            className="img-responsive"
+                          />
+                        </Link>
+
+                        <div className="cart_main">
+                          <button
+                            type="button"
+                            className="bg-yellow-400 hover:bg-red-600 w-10 h-10 flex items-center justify-center rounded-full"
+                            data-toggle="tooltip"
+                            title="Add to cart"
+                            data-original-title="Add to Cart"
+                            onClick={() => handleAddToCart(product)}
+                          >
+                            <i
+                              className="fa fa-shopping-cart"
+                              aria-hidden="true"
+                            ></i>
+                          </button>
+                        </div>
+                        <div className="button-group grid-btn justify-center flex">
+                          <button
+                            type="button"
+                            className="w-10 h-10 flex items-center justify-center rounded-full"
+                            data-toggle="tooltip"
+                            title="Quick review"
+                            data-original-title="Quickview"
+                            onClick={() => handleModal(product)}
+                          >
+                            <i className="fa fa-eye" aria-hidden="true"></i>
+                          </button>
+                        </div>
+                        {product.SoLuong<1&&(<div className="absolute top-6 left-1 "><span className="text-red-500">Out stock</span></div>)}
+                      </div>
+                      <div className="thumb-description clearfix">
+                        <div className="caption">
+                          <div className="desc-inner">
+                            <h4 className="product-title h-14">
+                              <Link to={`/products/${product.slug}`}>
+                                {product.TenSanPham}
+                              </Link>
+                            </h4>
+                          </div>
+                          <p className="price">
+                            <span className="price-new">
+                              {formatCurrency(product.DonGia)}
+                            </span>
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+            <Modal open={open} onClose={onCloseModal} center>
+              <div
+                id="product-page"
+                className="container "
+                style={{ width: "auto" }}
+              >
+                <div className="row">
+                  <div id="content" className="col-sm-12">
+                    <div class="pro-deatil clearfix row">
+                      <div class="col-sm-6 product-img">
+                        <div class="thumbnails">
+                          <div class="product-additional">
+                            <div class="pro-image">
+                              <span class="thumbnail">
+                                <img
+                                  src={`${currentPic?.source}`}
+                                  title={currentPic._id}
+                                  id="zoom"
+                                  alt={currentPic._id}
+                                />
+                              </span>
+                            </div>
+
+                            <div
+                              id="additional-carousel"
+                              class="owl-carousel owl-theme clearfix owl-loaded"
+                            >
+                              <div
+                                class="owl-stage-outer"
+                                style={{ marginBottom: "10px" }}
+                              >
+                                <div
+                                  class="owl-stage"
+                                  style={{ transition: "all 0.25s ease 0s" }}
+                                >
+                                  {pictures.length > 3 ? (
+                                    <Slider ref={slideRef} {...settings}>
+                                      {pictures.map((picture, index) => {
+                                        return (
+                                          <ImageInSlider
+                                            picture={picture}
+                                            handleChangeImage={
+                                              handleChangeImage
+                                            }
+                                            key={index}
+                                          />
+                                        );
+                                      })}
+                                    </Slider>
+                                  ) : (
+                                    <>
+                                      {pictures.map((picture, index) => {
+                                        return (
+                                          <div
+                                            class="owl-item"
+                                            style={{ width: "108px" }}
+                                            key={index}
+                                          >
+                                            <div class="image-additional">
+                                              <a
+                                                style={{ cursor: "pointer" }}
+                                                onClick={() => {
+                                                  handleChangeImage(picture);
+                                                }}
+                                              >
+                                                <img
+                                                  src={`${picture.source}`}
+                                                  alt={picture._id}
+                                                  width="80"
+                                                  height="80"
+                                                />
+                                              </a>
+                                            </div>
+                                          </div>
+                                        );
+                                      })}
+                                    </>
+                                  )}
+                                </div>
+                              </div>
+
+                              <div class="owl-nav">
+                                <div
+                                  class="owl-prev"
+                                  onClick={() => slideRef?.current?.slickPrev()}
+                                >
+                                  <i class="fa fa-angle-left"></i>
+                                </div>
+                                <div
+                                  class="owl-next"
+                                  onClick={() => slideRef?.current?.slickNext()}
+                                >
+                                  <i class="fa fa-angle-right"></i>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-sm-6">
+                        <div class="right_info">
+                          <h1 class="">{currentProduct?.TenSanPham}</h1>
+
+                          <hr />
+
+                          <ul class="list-unstyled">
+                            <li>
+                              <span class="disc">Product Code:</span>
+                              <span class="disc1"> {currentProduct?.code}</span>
+                            </li>
+                            <li>
+                              <span class="disc">Availability:</span>
+                              <span class="disc1">
+                                {" "}
+                                {currentProduct?.SoLuong > 0
+                                  ? `In stock (${currentProduct?.SoLuong})`
+                                  : "Out stock"}
+                              </span>
+                            </li>
+                          </ul>
+
+                          <hr />
+                          <ul class="list-unstyled">
+                            <li>
+                              <span class="pro_price">
+                                {formatCurrency(currentProduct?.DonGia)}
+                              </span>
+                            </li>
+                          </ul>
+
+                          <hr />
+
+                          <div id="product" class="product-options">
+                            <div class="form-group">
+                              <label
+                                class="control-label qty"
+                                for="input-quantity"
+                              >
+                                Qty
+                              </label>
+                              <div class="product-btn-quantity">
+                                <div class="pro-quantity">
+                                  <div class="minus-plus">
+                                    <button
+                                      class="w-10 h-10 flex items-center justify-center rounded-full border-dashed"
+                                      onClick={() => {
+                                        handleAmount(-1);
+                                      }}
+                                    >
+                                      <i class="fa fa-minus"></i>
+                                    </button>
+                                    <input
+                                      type="text"
+                                      name="quantity"
+                                      value={amount}
+                                      size="2"
+                                      id="input-quantity"
+                                      class="form-control"
+                                    />
+                                    <button
+                                      class="w-10 h-10 flex items-center justify-center rounded-full border-dashed"
+                                      onClick={() => {
+                                        handleAmount(1);
+                                      }}
+                                    >
+                                      <i class="fa fa-plus"></i>
+                                    </button>
+                                  </div>
+                                </div>
+                                <input
+                                  type="hidden"
+                                  name="product_id"
+                                  value="35"
+                                />
+                                <button
+                                  type="button"
+                                  id="button-cart"
+                                  onClick={() =>
+                                    handleAddToCart(currentProduct)
+                                  }
+                                  data-loading-text="Loading..."
+                                  class="btn btn-primary btn-lg btn-block"
+                                >
+                                  Add to Cart
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                          <hr />
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="col-sm-12" style={{ marginBottom: "50px" }}>
+                      <div className="row pro-tab">
+                        <ul class="nav nav-tabs">
+                          <li>
+                            <a>Description</a>
+                          </li>
+                        </ul>
+                        <div className="tab-content">
+                          <div className="tab-pane">
+                            <div
+                              dangerouslySetInnerHTML={{
+                                __html: currentProduct?.MoTa,
+                              }}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Modal>
+            {/* thanh pagination */}
+            <div className="pro_pagination clearfix">
+              <div className="col-sm-6 text-left">
+                Showing 1 to {productList.length} of {totalCount} ({total}{" "}
+                Pages)
+              </div>
+              <div className="col-sm-6 text-right">
+                <Pagination
+                  activePage={Number.parseInt(filter.pageNo)}
+                  itemsCountPerPage={3}
+                  totalItemsCount={totalCount}
+                  pageRangeDisplayed={total > 5 ? 5 : total}
+                  onChange={onPageChange}
+                  activeLinkClass="bg-yellow-400 text-white"
+                />
+                {/* <ul className="pagination">
+                                    <li className="active"><span>1</span></li>
+                                    <li><a href="https://opencart.mahardhi.com/MT04/vegelite/index.php?route=product/category&amp;path=18&amp;page=2">2</a></li>
+                                    <li><a href="https://opencart.mahardhi.com/MT04/vegelite/index.php?route=product/category&amp;path=18&amp;page=3">3</a></li>
+                                    <li><a href="https://opencart.mahardhi.com/MT04/vegelite/index.php?route=product/category&amp;path=18&amp;page=2">&gt;</a></li>
+                                    <li><a href="https://opencart.mahardhi.com/MT04/vegelite/index.php?route=product/category&amp;path=18&amp;page=3">&gt;|</a></li>
+                                </ul> */}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default ListProduct;
