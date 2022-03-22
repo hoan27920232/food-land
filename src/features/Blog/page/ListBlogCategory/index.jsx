@@ -22,7 +22,6 @@ function ListBlogByCategory() {
     const onPageChange = (page) => {
       setFilter({ ...filter, pageNo: page });
     };
-  
     const onCategoryChange = (value) => {
       setFilter({ ...filter, DanhMucBlog: value });
     };
