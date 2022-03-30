@@ -45,7 +45,7 @@ function ListProduct() {
   const location = useLocation();
   const [filter, setFilter] = useState({
     pageNo: 1,
-    pageSize: 12,
+    pageSize: 6,
   });
   const [total, setTotal] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
@@ -641,7 +641,7 @@ function ListProduct() {
               <div className="col-sm-6 text-right">
                 <Pagination
                   activePage={Number.parseInt(filter.pageNo)}
-                  itemsCountPerPage={3}
+                  itemsCountPerPage={6}
                   totalItemsCount={totalCount}
                   pageRangeDisplayed={total > 5 ? 5 : total}
                   onChange={onPageChange}
