@@ -17,7 +17,7 @@ Home.propTypes = {
 
 function Home(props) {
     useMetaTags({
-        title: 'Food Land'
+        title: 'Tay Bac Food'
       })
     return (
         <div className="home">

@@ -145,10 +145,10 @@ function MiddleHeader() {
           <div id="logo">
             <div className="cursor-pointer">
               <img
-                src="https://opencart.mahardhi.com/MT04/vegelite/image/catalog/logo.png"
+                src="https://www.logomaker.com/api/main/images/1j+ojFVDOMkX9Wytexe43D6khv6FpBBMkRrNwXs1M3EMoAJtliUtgPNv8PU4"
                 title="Your Store"
                 alt="Your Store"
-                className="img-responsive"
+                className="img-responsive w-48"
                 onClick={() => {
                   handleClick("");
                 }}

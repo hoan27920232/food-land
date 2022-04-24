@@ -21,6 +21,7 @@ SelectField.defaultProps = {
 }
 function SelectField(props) {
     const { field,label,placeholder,disabled,breakDown, options, form} = props 
+    console.log(options, "options")
     const { name,value } = field
     const { touched,errors } = form
     const showError = touched[name] && errors[name]
@@ -39,10 +40,13 @@ function SelectField(props) {
         control: (styles) => ({...styles, borderRadius: '20px', border: `2px dotted ${showError ? 'rgba(220,38,38,1)' : 'grey'}`, padding: '1px 5px'})
     }
     return (
-        <div>
-            {label && <label htmlFor={name}>{label}</label>}
+        <div className='grid grid-cols-12 w-full'>
+            <div className='col-span-1'>
+            {label && <label  htmlFor={name}>{label}</label>}
+            </div>
             {breakDown && <br />}
-            <Select 
+           <Select 
+           className='col-span-9 col-start-3'
                 id={name}
                 {...field}
                 value={selectedOption}

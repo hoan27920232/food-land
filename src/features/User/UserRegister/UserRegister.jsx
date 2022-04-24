@@ -19,8 +19,14 @@ function UserRegister() {
         password: "",
         repassword: "",
         NgaySinh: "",
+        shippingAddress: {
+            provinceOrCity: null,
+            district: null,
+            ward: null,
+        },
     }
     const handleSubmit =async (values) => {
+        console.log(values)
         const action = await saveUser({...values, NgaySinh : Date.parse(values.NgaySinh), _id : 0, TrangThai : 1})
         .then(data => {
             store.addNotification({
