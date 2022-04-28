@@ -8,6 +8,8 @@ import UserRegister from "./UserRegister/UserRegister";
 import UserInfo from "./UserUpdateInfo/UserInfo";
 import ChangePassword from "./ChangePassword/index";
 import HistoryPurchase from "./HistoryPurchase/index";
+import GetResetForm from "./Get Reset";
+import ResetPassForm from "./Reset Pass";
 
 function User() {
   const match = useRouteMatch();
@@ -31,6 +33,9 @@ function User() {
         <Switch>
           <Route path={`${match.url}/register`} component={UserRegister} />
           <Route path={`${match.url}/login`} component={LoginForm} />
+          <Route path={`${match.url}/getreset`} component={GetResetForm} />
+          <Route path={`${match.url}/resetpassword`} component={ResetPassForm} />
+
           <Redirect to="/account/login" />
         </Switch>
       ) : (

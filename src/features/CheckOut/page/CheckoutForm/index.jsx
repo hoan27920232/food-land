@@ -128,6 +128,22 @@ function CheckoutForm(props) {
       },
       soluong: p.cartQuantity,
     }));
+    let weight = 0
+    for (let i = 0; i < cartProduct.length; i++) {
+      weight +=
+      cartProduct[i].KhoiLuong * cartProduct[i].cartQuantity
+    }
+    console.log(weight)
+    const res = await axios.get(
+      `${process.env.REACT_APP_API_URL}ghtk/calculateShip`,
+      {
+        params: {
+          province: city.name,
+          district: district.name,
+          weight: weight,
+        },
+      }
+    );
     const finalData = {
       items: items,
       email: values.email,
@@ -141,23 +157,24 @@ function CheckoutForm(props) {
         provinceOrCity: city,
         district: district,
         ward: ward
-      }
+      },
+      shipMoney: res.data?.ship?.fee?.fee || 0,
     };
     console.log(finalData)
-    // const action = await createOrder(finalData)
-    //   .then((res) => {
-    //     payUrl = res.data.payUrl;
-    //     setMessage("");
-    //   })
-    //   .catch((err) => setMessage(err.response.data.message));
-    // setTimeout(() => {
-    //   if (payUrl !== "" && finalData.KieuThanhToan == "momo") {
-    //     window.location.replace(payUrl);
-    //   } else {
-    //     history.push("/checkout/confirm");
-    //   }
-    //   setLoad(false);
-    // }, 2000);
+    const action = await createOrder(finalData)
+      .then((res) => {
+        payUrl = res.data.payUrl;
+        setMessage("");
+      })
+      .catch((err) => setMessage(err.response.data.message));
+    setTimeout(() => {
+      if (payUrl !== "" && finalData.KieuThanhToan == "momo") {
+        window.location.replace(payUrl);
+      } else {
+        history.push("/checkout/confirm");
+      }
+      setLoad(false);
+    }, 2000);
   };
   const onChangeCity = async (e) => {
     if (e.target.value) {

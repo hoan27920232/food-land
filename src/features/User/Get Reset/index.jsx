@@ -2,46 +2,41 @@ import React from "react";
 import BreadCrumb from "components/BreadCrumb";
 import AsideAccount from "components/Aside/AsideAcountOutside";
 import { useDispatch, useSelector } from "react-redux";
-import { getMe, loginSucces, loginThunk } from "./loginSlice";
-import { Link, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import InputField from "components/InputField";
 import * as Yup from "yup";
 import PropTypes from "prop-types";
 import { FastField, Form, Formik } from "formik";
-import { login } from "api/userApi";
+import { getReset } from "api/userApi";
 import { store } from 'react-notifications-component';
 
-LoginForm.propTypes = {
+GetResetForm.propTypes = {
   initialValues: PropTypes.object,
 };
-LoginForm.defaultProps = {
+GetResetForm.defaultProps = {
   initialValues: {
     email: "",
-    password: "",
   },
 };
 
-function LoginForm(props) {
+function GetResetForm(props) {
   const { initialValues } = props;
 
   const validateSchema = Yup.object().shape({
-    email: Yup.string().required(),
+    email: Yup.string().required("This field is required")
+    .matches(/^\S+@\S+\.\S+$/),
 
-    password: Yup.string().required(),
   });
 
-  const token = useSelector((state) => state.me.token);
   const history = useHistory();
   const dispatch = useDispatch();
   const onFinish = async (values) => {
-    const action = await login(values)
+    const action = await getReset(values)
       .then((resolve) => {
-        const action = loginSucces(resolve);
-        dispatch(action);
         history.push("/");
         store.addNotification({
           title: "Wonderful!",
-          message: "Login successfully",
+          message: "Send link to email successfully",
           type: "success",
           insert: "top",
           container: "top-right",
@@ -56,7 +51,7 @@ function LoginForm(props) {
       .catch((error) => {
         store.addNotification({
           title: "Oops!",
-          message: "Login failed, wrong password or email\n" + error.message,
+          message: "Failed, something wrong\n" + error.message,
           type: 'danger',
           insert: "top",
           container: "top-right",
@@ -68,13 +63,11 @@ function LoginForm(props) {
           }
       })
       });
-    const me = getMe();
-    dispatch(me);
   };
   return (
     <div className="user-login">
       <div className="container">
-        <BreadCrumb currentPage="Login" lastPage="My account" />
+        <BreadCrumb currentPage="Get Reset" lastPage="My account" />
       </div>
 
       <div className="container">
@@ -85,7 +78,7 @@ function LoginForm(props) {
           <div id="content" className="col-sm-9">
             <div className="row">
               <div className="well">
-                <h2>Login</h2>
+                <h2>Get reset</h2>
                 <Formik
                   validationSchema={validateSchema}
                   initialValues={initialValues}
@@ -104,19 +97,6 @@ function LoginForm(props) {
                           breakDown={true}
                         />
 
-                        <FastField
-                          name="password"
-                          component={InputField}
-                          label="Password"
-                          placeholder="******"
-                          breakDown={true}
-                          type="password"
-                        />
-                        <div className="pb-3 text-right mr-14">
-                        <Link to="/account/getreset">
-                            Forget password ?
-                        </Link>
-                        </div>
                         <div className="centered">
                           <button className="btn btn-primary flex" type="submit">
                             {isSubmitting && (
@@ -141,7 +121,7 @@ function LoginForm(props) {
                                 />
                               </svg>
                             )}
-                            Login
+                            Submit
                           </button>
                         </div>
                       </Form>
@@ -157,4 +137,4 @@ function LoginForm(props) {
   );
 }
 
-export default LoginForm;
+export default GetResetForm;

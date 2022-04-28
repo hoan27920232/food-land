@@ -212,6 +212,8 @@ function UserRegisterForm(props) {
                                   padding: "1px 5px",
                                 }}
                               >
+                                                                <option value="">Select city</option>
+
                                 {cities.map((city) => (
                                   <option key={city.id} value={city.id}>
                                     {city.id} {city.name}
