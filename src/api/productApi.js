@@ -21,3 +21,8 @@ export const getProductByCategory = (idCategory) => {
     const url = '/sanphams'
     return axiosClient.get(url, { DanhMucSP : idCategory })
 }
+
+export const postComment = (id, params) => {
+    const url = `/sanphams/comment/${id}`
+    return axiosClient.put(url, params)
+}

@@ -1,13 +1,13 @@
 
  const SidebarData = [
   {
-    title: 'HOME',
+    title: 'TRANG CHỦ',
     path: '/',
    
     cName: 'nav-text'
   },
   {
-    title: 'FOOD',
+    title: 'SẢN PHẨM',
     path: '/products',
     
     cName: 'nav-text'
@@ -19,7 +19,7 @@
     cName: 'nav-text'
   },
   {
-    title: 'INFORMATION',
+    title: 'THÔNG TIN WEBSITE',
     path: '/contacts',
     
     cName: 'nav-text'

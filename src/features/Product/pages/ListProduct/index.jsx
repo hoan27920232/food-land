@@ -289,7 +289,7 @@ function ListProduct() {
       {/* Thanh định hướng breadcrumb */}
 
       <div className="container">
-        <BreadCrumb currentPage="Food" />
+        <BreadCrumb currentPage="Sản phẩm" />
       </div>
 
       {/* thanh aside bên trái và list foods */}

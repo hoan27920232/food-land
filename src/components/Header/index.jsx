@@ -398,7 +398,7 @@ function BottomHeader() {
                   handleClick("");
                 }}
               >
-                home
+                Trang chủ
               </a>
             </li>
             <li>
@@ -408,7 +408,7 @@ function BottomHeader() {
                   handleClick("products");
                 }}
               >
-                food
+                Sản phẩm
               </a>
             </li>
             <li>
@@ -428,7 +428,7 @@ function BottomHeader() {
                   handleClick("contacts");
                 }}
               >
-                information
+                Thông tin website
               </a>
             </li>
           </ul>

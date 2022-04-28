@@ -27,25 +27,25 @@ function Home(props) {
                 <div className="hidden md:block"><Cart1/></div>
             </div>
             <div className="py-6 flex flex-col items-center">
-                <div className="md:text-2xl lg:text-3xl text-left w-4/5 px-4 2xl:px-48">HOT PRODUCTS</div>
+                <div className="md:text-2xl lg:text-3xl text-left w-4/5 px-4 2xl:px-48">SẢN PHẨM HOT</div>
                 <div className="w-4/5  2xl:px-44"><HotProduct /></div>
             </div>
             <div className="bg-white flex flex-col items-center ">
                 <div className="w-4/5 2xl:px-44"><ImageBanner/></div>
             </div>
             <div className="py-6 flex flex-col items-center">
-                <div className="md:text-2xl lg:text-3xl  text-left w-4/5 px-4 2xl:px-48">NEW PRODUCTS</div>
+                <div className="md:text-2xl lg:text-3xl  text-left w-4/5 px-4 2xl:px-48">SẢN PHẨM MỚI</div>
                 <div className="w-4/5 2xl:px-44 "><NewProduct /></div>
             </div>
             <div className="bg-white flex flex-col items-center ">
                 <div className="w-4/5 2xl:px-48"><ImageBanner2/></div>
             </div>
             <div className="py-6 flex flex-col items-center  ">
-                <div className="md:text-2xl lg:text-3xl  text-left w-4/5 px-4 2xl:px-48">CHEAP PRODUCTS</div>
+                <div className="md:text-2xl lg:text-3xl  text-left w-4/5 px-4 2xl:px-48">SẢN PHẨM GIÁ RẺ</div>
                 <div className="w-4/5 2xl:px-44 "><CheapProduct /></div>
             </div>
             <div className="py-6 bg-white flex flex-col items-center ">
-                <div className="md:text-2xl lg:text-3xl  text-left w-4/5 px-4 2xl:px-48">LATEST BLOGS</div>
+                <div className="md:text-2xl lg:text-3xl  text-left w-4/5 px-4 2xl:px-48">BLOG MỚI NHẤT</div>
                 <div className=" w-4/5 2xl:px-44 "><BlogSlide/></div>
             </div>
         </div>
