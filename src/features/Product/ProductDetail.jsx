@@ -341,7 +341,6 @@ function ProductDetail() {
                   <div>
                     <StarRatings
                       rating={rating}
-                      starRatedColor="blue"
                       numberOfStars={5}
                       starRatedColor="rgb(245, 171, 30)"
                       starDimension="20px"
@@ -466,7 +465,16 @@ function ProductDetail() {
                             className="w-10 h-10 rounded-xl"
                             alt=""
                           />
-                          <p>{p.email}</p>
+                          <div>
+                            <p>{p.email}</p>
+                            <StarRatings
+                              rating={p.rating}
+                              numberOfStars={5}
+                              starRatedColor="rgb(245, 171, 30)"
+                              starDimension="15px"
+                              starSpacing="2px"
+                            />
+                          </div>
                         </div>
                         <div className="border border-dashed mt-2 p-3">
                           {p.content}
