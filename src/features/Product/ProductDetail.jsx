@@ -19,6 +19,7 @@ import { Field, Form, Formik } from "formik";
 import * as Yup from "yup";
 import Rating from "react-rating";
 import moment from "moment";
+import StarRatings from "react-star-ratings";
 function ImageInSlider({ picture, handleChangeImage }) {
   return (
     <div class="owl-item" style={{ width: "108px" }}>
@@ -134,7 +135,8 @@ function ProductDetail() {
   const [relateProduct, setRelateProduct] = useState([]);
   const [currentDm, setcurrentDm] = useState();
   const [comments, setComments] = useState([]);
-  const [id, setId] = useState('');
+  const [id, setId] = useState("");
+  const [rating, setRating] = useState(0);
   const commentBegin = {
     rating: 0,
     content: "",
@@ -148,14 +150,15 @@ function ProductDetail() {
       try {
         const params = slug;
         const response = await getProductBySlug(params);
-        console.log(response.data)
-        setId(response.data._id)
+        console.log(response.data);
+        setId(response.data._id);
         setProductList(response.data);
         setPictures(response.data.AnhMoTa);
         setCurrentPic(response.data.AnhMoTa[0]);
         setcurrentDm(response.data.DanhMucSP._id);
-        console.log(response.data.Comments)
-        setComments(response.data.Comments)
+        console.log(response.data.Comments);
+        setComments(response.data.Comments);
+        setRating(response.data.averageRating);
         const response2 = await getAllProduct({
           DanhMucSP: currentDm,
         });
@@ -218,11 +221,18 @@ function ProductDetail() {
   const onOpenModal = () => setOpen(true);
   const onCloseModal = () => setOpen(false);
   const onFinish = async (values) => {
-    console.log("Hello")
-      values = {...values, name: user.TenKhachHang, email: user.email, date: new Date()}
-      const post = await postComment(id, values).then(data => {
-        setComments([...comments, values])
-      }).catch(err => console.log(err))
+    console.log("Hello");
+    values = {
+      ...values,
+      name: user.TenKhachHang,
+      email: user.email,
+      date: new Date(),
+    };
+    const post = await postComment(id, values)
+      .then((data) => {
+        setComments([...comments, values]);
+      })
+      .catch((err) => console.log(err));
   };
   return (
     <div className="product-detail-main">
@@ -328,7 +338,15 @@ function ProductDetail() {
               <div class="col-sm-6">
                 <div class="right_info">
                   <h1 class="">{productList.TenSanPham}</h1>
-
+                  <div>
+                    <StarRatings
+                      rating={rating}
+                      starRatedColor="blue"
+                      numberOfStars={5}
+                      starRatedColor="rgb(245, 171, 30)"
+                      starDimension="20px"
+                    />
+                  </div>
                   <hr />
 
                   <ul class="list-unstyled">
@@ -437,98 +455,112 @@ function ProductDetail() {
                 </ul>
                 <div className="tab-content">
                   <div className="tab-pane">
-                    {comments.map((p, i) => 
+                    {comments.map((p, i) => (
                       <div key={i} className="border-dashed	border p-3 mb-3">
                         <div className="font-bold">
                           {p.name} - {moment(p.date).format("MMM Do YY")}
                         </div>
                         <div className="flex space-x-2">
-                          <img src="https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg" className="w-10 h-10 rounded-xl" alt="" />
+                          <img
+                            src="https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg"
+                            className="w-10 h-10 rounded-xl"
+                            alt=""
+                          />
                           <p>{p.email}</p>
                         </div>
                         <div className="border border-dashed mt-2 p-3">
                           {p.content}
                         </div>
                       </div>
-                    )}
+                    ))}
                   </div>
                 </div>
               </div>
             </div>
-           {
-             user &&  <div className="col-sm-12 border p-4 mb-24">
-             <Formik
-               validationSchema={validateSchema}
-               initialValues={commentBegin}
-               onSubmit={onFinish}
-             >
-               {(formikProps) => {
-                 const {
-                   values,
-                   errors,
-                   touched,
-                   isSubmitting,
-                   handleChange,
-                 } = formikProps;
-                 console.log(values);
-                 return (
-                   <Form>
-                     <Field name="rating" id="rating" type="number">
-                       {({ field: { value }, form: { setFieldValue } }) => (
-                         <div className="mb-4 flex justify-center">
-                           <Rating
-                             placeholderRating={5}
-                             emptySymbol={`fa fa-star-o fa-2x`}
-                             fullSymbol={`fa fa-star fa-2x`}
-                             placeholderSymbol={`fa fa-star-o fa-2x`}
-                             onChange={(e) => {
-                               setFieldValue("rating", e);
-                             }}
-                             initialRating={values.rating}
-                           />
-                         </div>
-                       )}
-                     </Field>
-                     <Field name="content" type="text">
-                     {({ field: { value }, form: { setFieldValue } }) => (
-                         <textarea name="" id="" className="w-full outline-none p-4" rows="10" value={values.content} onChange={(e) => {
-                           setFieldValue("content", e.target.value)
-                         }}></textarea>
-                       )}
-                     </Field>
-                     <div className="flex justify-end">
-                       <button className="btn btn-primary flex" type="submit">
-                         {isSubmitting && (
-                           <svg
-                             className="animate-spin h-4 w-4 text-white mr-2"
-                             xmlns="http://www.w3.org/2000/svg"
-                             fill="none"
-                             viewBox="0 0 24 24"
-                           >
-                             <circle
-                               className="opacity-25"
-                               cx={12}
-                               cy={12}
-                               r={10}
-                               stroke="currentColor"
-                               strokeWidth={4}
-                             />
-                             <path
-                               className="opacity-75"
-                               fill="currentColor"
-                               d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                             />
-                           </svg>
-                         )}
-                         Comment
-                       </button>
-                     </div>
-                   </Form>
-                 );
-               }}
-             </Formik>
-           </div>
-           }
+            {user && (
+              <div className="col-sm-12 border p-4 mb-24">
+                <Formik
+                  validationSchema={validateSchema}
+                  initialValues={commentBegin}
+                  onSubmit={onFinish}
+                >
+                  {(formikProps) => {
+                    const {
+                      values,
+                      errors,
+                      touched,
+                      isSubmitting,
+                      handleChange,
+                    } = formikProps;
+                    console.log(values);
+                    return (
+                      <Form>
+                        <Field name="rating" id="rating" type="number">
+                          {({ field: { value }, form: { setFieldValue } }) => (
+                            <div className="mb-4 flex justify-center">
+                              <Rating
+                                placeholderRating={5}
+                                emptySymbol={`fa fa-star-o fa-2x`}
+                                fullSymbol={`fa fa-star fa-2x`}
+                                placeholderSymbol={`fa fa-star-o fa-2x`}
+                                onChange={(e) => {
+                                  setFieldValue("rating", e);
+                                }}
+                                initialRating={values.rating}
+                              />
+                            </div>
+                          )}
+                        </Field>
+                        <Field name="content" type="text">
+                          {({ field: { value }, form: { setFieldValue } }) => (
+                            <textarea
+                              name=""
+                              id=""
+                              className="w-full outline-none p-4"
+                              rows="10"
+                              value={values.content}
+                              onChange={(e) => {
+                                setFieldValue("content", e.target.value);
+                              }}
+                            ></textarea>
+                          )}
+                        </Field>
+                        <div className="flex justify-end">
+                          <button
+                            className="btn btn-primary flex"
+                            type="submit"
+                          >
+                            {isSubmitting && (
+                              <svg
+                                className="animate-spin h-4 w-4 text-white mr-2"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                              >
+                                <circle
+                                  className="opacity-25"
+                                  cx={12}
+                                  cy={12}
+                                  r={10}
+                                  stroke="currentColor"
+                                  strokeWidth={4}
+                                />
+                                <path
+                                  className="opacity-75"
+                                  fill="currentColor"
+                                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                />
+                              </svg>
+                            )}
+                            Comment
+                          </button>
+                        </div>
+                      </Form>
+                    );
+                  }}
+                </Formik>
+              </div>
+            )}
             {relateProduct.length > 0 && (
               <div className="py-10 ">
                 <p className=" xl:text-3xl">Relate product</p>
