@@ -22,7 +22,7 @@ function Checkout(props) {
       <div className="container">
         <div className="row">
           <aside id="column-left" className="col-sm-3">
-            <Aside filter="yes" />
+            <Aside/>
           </aside>
           <div id="content" className="col-sm-9">
             <Switch>

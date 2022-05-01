@@ -70,7 +70,7 @@ function TopHeader() {
           <div className="top-left ">
             <div className="open_time hidden-xs hidden md:block">
               <i className="fa fa-clock-o"></i>
-              <span className="open-time"> Opening Hours: </span>
+              <span className="open-time"> Website hỗ trợ từ: </span>
               <span>8:00 AM - 8:00 PM</span>
             </div>
           </div>

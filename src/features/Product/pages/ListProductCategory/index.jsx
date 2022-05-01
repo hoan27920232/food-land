@@ -319,7 +319,7 @@ function ListCategoryProduct() {
                 <div className="cat-info">
                   <div class="cat-sort justify-end">
                     <label class="control-label text_sort" for="input-sort">
-                      Sort By:
+                      Sắp xếp theo:
                     </label>
                     <div class="clearfix" style={{ marginLeft: "10px" }}>
                       <div class="select-filter-sort">
@@ -329,11 +329,11 @@ function ListCategoryProduct() {
                           value={filter.sort ? filter.sort : "default"}
                           onChange={handleSelect}
                         >
-                          <option value="_id">Default</option>
-                          <option value="TenSanPham">Name (A - Z)</option>
-                          <option value="-TenSanPham">Name (Z - A)</option>
-                          <option value="DonGia">Price (Low &gt; High)</option>
-                          <option value="-DonGia">Price (High &gt; Low)</option>
+                          <option value="_id">Mặc định</option>
+                          <option value="TenSanPham">Tên sản phẩm (A - Z)</option>
+                          <option value="-TenSanPham">Tên sản phẩm (Z - A)</option>
+                          <option value="DonGia">Gía (Thấp &gt; Cao)</option>
+                          <option value="-DonGia">Gía (Cao &gt; Thấp)</option>
                         </select>
                       </div>
                     </div>

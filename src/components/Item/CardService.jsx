@@ -22,8 +22,8 @@ function CardService() {
                               </div>
                               </div>
                     </div>
-                    <p className="text-xl hover:text-yellow-400 text-center">Free Delivery</p>
-                    <p className="text-gray-400 text-center">Shop For all order over $50</p>
+                    <p className="text-xl hover:text-yellow-400 text-center">Các sự kiện freeship</p>
+                    <p className="text-gray-400 text-center">Hỗ trợ freeship trong các ngày lễ</p>
                 </div>
 
 
@@ -40,8 +40,8 @@ function CardService() {
                               </div>
                               </div>
                     </div>
-                    <p className="text-xl hover:text-yellow-400 text-center">Cash On Delivery</p>
-                    <p className="text-gray-400 text-center">100% Money Back guarantee</p>
+                    <p className="text-xl hover:text-yellow-400 text-center">Hoàn trả nếu có lỗi</p>
+                    <p className="text-gray-400 text-center">100% hoàn trả nếu hàng hóa có vấn đề</p>
                 </div>
 
 
@@ -58,8 +58,8 @@ function CardService() {
                               </div>
                               </div>
                     </div>
-                    <p className="text-xl hover:text-yellow-400 text-center">Special Gift Card</p>
-                    <p className="text-gray-400 text-center">Offer special bonuses with gift</p>
+                    <p className="text-xl hover:text-yellow-400 text-center">Qùa tặng kèm</p>
+                    <p className="text-gray-400 text-center">Được tặng kèm quà khi mua hàng</p>
                 </div>
 
 
@@ -76,8 +76,8 @@ function CardService() {
                               </div>
                               </div>
                     </div>
-                    <p className="text-xl hover:text-yellow-400 text-center">24/7 Support</p>
-                    <p className="text-gray-400 text-center">Answer for question all time</p>
+                    <p className="text-xl hover:text-yellow-400 text-center">24/7 hỗ trợ</p>
+                    <p className="text-gray-400 text-center">Hỗ trợ khách 24/7</p>
                 </div>
             </div>
         </div>

@@ -14,6 +14,7 @@ import qs from "qs";
 import { Modal } from "react-responsive-modal";
 import "react-responsive-modal/styles.css";
 import Slider from "react-slick";
+import StarRatings from "react-star-ratings";
 ///===================== doan code cua Modal
 function ImageInSlider({ picture, handleChangeImage }) {
   return (
@@ -179,44 +180,44 @@ function ListProduct() {
   }, []);
   //------------------modal
   useEffect(() => {
-   const fetch = async () => {
-    const urlDecode = qs.parse(window.location.search.substring(1), {
-      decoder(str, decoder, charset) {
-        const strWithoutPlus = str.replace(/\+/g, " ");
-        if (charset === "iso-8859-1") {
-          // unescape never throws, no try...catch needed:
-          return strWithoutPlus.replace(/%[0-9a-f]{2}/gi, unescape);
-        }
+    const fetch = async () => {
+      const urlDecode = qs.parse(window.location.search.substring(1), {
+        decoder(str, decoder, charset) {
+          const strWithoutPlus = str.replace(/\+/g, " ");
+          if (charset === "iso-8859-1") {
+            // unescape never throws, no try...catch needed:
+            return strWithoutPlus.replace(/%[0-9a-f]{2}/gi, unescape);
+          }
 
-        if (/^(\d+|\d*\.\d+)$/.test(str)) {
-          return parseFloat(str);
-        }
+          if (/^(\d+|\d*\.\d+)$/.test(str)) {
+            return parseFloat(str);
+          }
 
-        const keywords = {
-          true: true,
-          false: false,
-          null: null,
-          undefined,
-        };
-        if (str in keywords) {
-          return keywords[str];
-        }
+          const keywords = {
+            true: true,
+            false: false,
+            null: null,
+            undefined,
+          };
+          if (str in keywords) {
+            return keywords[str];
+          }
 
-        // utf-8
-        try {
-          return decodeURIComponent(strWithoutPlus);
-        } catch (e) {
-          return strWithoutPlus;
-        }
-      },
-    });
-    const response = await getAllProduct({ ...filter, ...urlDecode });
-    setProductList(response.result.data);
-    setTotal(response.result.totalPage);
-    setTotalCount(response.result.totalCount);
-   }
-   fetch()
-  },[location])
+          // utf-8
+          try {
+            return decodeURIComponent(strWithoutPlus);
+          } catch (e) {
+            return strWithoutPlus;
+          }
+        },
+      });
+      const response = await getAllProduct({ ...filter, ...urlDecode });
+      setProductList(response.result.data);
+      setTotal(response.result.totalPage);
+      setTotalCount(response.result.totalCount);
+    };
+    fetch();
+  }, [location]);
   useEffect(() => {
     const fetchProductList = async () => {
       try {
@@ -226,7 +227,6 @@ function ListProduct() {
           pathname: "/products",
           search: searchStr,
         });
-        
       } catch (error) {
         console.log("Failed to fetch product list: ", error);
       }
@@ -238,11 +238,10 @@ function ListProduct() {
   //=========add to cart
   const dispatch = useDispatch();
   const handleAddToCart = (product) => {
-    if(product.SoLuong>0){
+    if (product.SoLuong > 0) {
       dispatch(addToCard({ ...product, quantity: amount }));
       history.push("/cart");
     }
-    
   };
   //=============code cho modal
 
@@ -274,13 +273,12 @@ function ListProduct() {
   const [settings, setSettings] = useState([]);
 
   useEffect(() => {
-      const fetchSetting = async () => {
-        const data = await getSettingById('setting-banner-product');
-        if(data && data.data && data.data.value)
-          setSettings(data.data.value);
-      };
-      fetchSetting();
-    },[]);
+    const fetchSetting = async () => {
+      const data = await getSettingById("setting-banner-product");
+      if (data && data.data && data.data.value) setSettings(data.data.value);
+    };
+    fetchSetting();
+  }, []);
 
   //==============================
 
@@ -324,7 +322,7 @@ function ListProduct() {
                       className="control-label text_sort"
                       htmlFor="input-sort"
                     >
-                      Sort By:
+                      Sắp xếp theo:
                     </label>
                     <div className="clearfix" style={{ marginLeft: "10px" }}>
                       <div className="select-filter-sort">
@@ -393,7 +391,11 @@ function ListProduct() {
                             <i className="fa fa-eye" aria-hidden="true"></i>
                           </button>
                         </div>
-                        {product.SoLuong<1&&(<div className="absolute top-6 left-1 "><span className="text-red-500">Out stock</span></div>)}
+                        {product.SoLuong < 1 && (
+                          <div className="absolute top-6 left-1 ">
+                            <span className="text-red-500">Out stock</span>
+                          </div>
+                        )}
                       </div>
                       <div className="thumb-description clearfix">
                         <div className="caption">
@@ -519,7 +521,13 @@ function ListProduct() {
                       <div class="col-sm-6">
                         <div class="right_info">
                           <h1 class="">{currentProduct?.TenSanPham}</h1>
-
+                          <StarRatings
+                            rating={currentProduct?.averageRating}
+                            numberOfStars={5}
+                            starRatedColor="rgb(245, 171, 30)"
+                            starDimension="15px"
+                            starSpacing="2px"
+                          />
                           <hr />
 
                           <ul class="list-unstyled">
@@ -537,7 +545,6 @@ function ListProduct() {
                               </span>
                             </li>
                           </ul>
-
                           <hr />
                           <ul class="list-unstyled">
                             <li>

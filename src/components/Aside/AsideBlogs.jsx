@@ -77,7 +77,7 @@ function Aside(props) {
     <>
       <div className="category-list">
         <div className="box-category">
-          <h3 className="toggled relative">Categories</h3>
+          <h3 className="toggled relative">Danh mục</h3>
           <ul className="list-unstyled parent" id="selectMe-desk">
             {categoryList.map((category) => {
               return (
@@ -96,7 +96,7 @@ function Aside(props) {
       </div>
       <div className="box-content special">
         <div className="page-title toggled">
-          <h3>Specials</h3>
+          <h3>Sản phẩm đặc biệt</h3>
         </div>
         <div
           className="block_box row"

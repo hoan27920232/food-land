@@ -193,7 +193,7 @@ function UserRegisterForm(props) {
                           <div className="flex mb-10">
                             <div className="ml-8">
                               <label htmlFor="city" className="mr-2">
-                                City
+                                Thành phố
                               </label>
                               <Field
                                 id="city"
@@ -212,7 +212,7 @@ function UserRegisterForm(props) {
                                   padding: "1px 5px",
                                 }}
                               >
-                                                                <option value="">Select city</option>
+                                                                <option value="">Chọn thành phố</option>
 
                                 {cities.map((city) => (
                                   <option key={city.id} value={city.id}>
@@ -231,7 +231,7 @@ function UserRegisterForm(props) {
                             </div>
                             <div className="ml-8">
                               <label htmlFor="district" className="mr-2">
-                                District
+                              Quận/huyện
                               </label>
                               <Field
                                 id="district"
@@ -249,7 +249,7 @@ function UserRegisterForm(props) {
                                   padding: "1px 5px",
                                 }}
                               >
-                                <option value="">Select district</option>
+                                <option value="">Chọn Quận/huyện</option>
 
                                 {districts.map((district) => (
                                   <option key={district.id} value={district.id}>
@@ -262,13 +262,13 @@ function UserRegisterForm(props) {
                                 touched?.shippingAddress?.district &&
                                 errors?.shippingAddress?.district && (
                                   <p className="text-red-700 text-center">
-                                    Chưa có tỉnh
+                                    Chưa có Quận/huyện
                                   </p>
                                 )}
                             </div>
                             <div className="ml-8">
                               <label htmlFor="ward" className="mr-2">
-                                District
+                                Xã
                               </label>
                               <Field
                                 id="ward"
@@ -284,7 +284,7 @@ function UserRegisterForm(props) {
                                   padding: "1px 5px",
                                 }}
                               >
-                                <option value="">Select ward</option>
+                                <option value="">Chọn xã</option>
 
                                 {wards.map((ward) => (
                                   <option key={ward.id} value={ward.id}>

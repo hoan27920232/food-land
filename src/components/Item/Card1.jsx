@@ -11,32 +11,27 @@ function Card1() {
         <div className="Cart1 text-white  ">
             <div className="md:flex lg:flex flex-row item-center justify-center sm:space-x-20 xl:space-x-40 mx-10">
                 <div className=" grid grid-cols-1 item-center justify-center my-16">
-                    <div className="mx-auto item-center justify-center">
+                    {/* <div className="mx-auto item-center justify-center">
                         <img className="h-12 item-center justify-center mb-3" src={Image1} alt=""/>
-                    </div>
-                    <p className="text-xl  text-center">Burger</p>
+                    </div> */}
                     
                 </div>
-                <div className="grid grid-cols-1 item-center justify-center my-16">
+                {/* <div className="grid grid-cols-1 item-center justify-center my-16">
                     <img className="h-12 m-auto mb-3"  src={Image2} alt=""/>
-                    <p className="text-xl text-center">Pizza</p>
                     
-                </div>
-                <div className="grid grid-cols-1 item-center justify-center my-16">
+                </div> */}
+                {/* <div className="grid grid-cols-1 item-center justify-center my-16">
                     <img className="h-12 m-auto mb-3" src={Image3} alt=""/>
-                    <p className="text-xl text-center">Tacos</p>
                     
-                </div>
-                <div className="grid grid-cols-1  justify-center my-16">
+                </div> */}
+                {/* <div className="grid grid-cols-1  justify-center my-16">
                     <img className="h-12 m-auto mb-3" src={Image4} alt=""/>
-                    <p className="text-xl text-center">Salad</p>
                     
-                </div>
-                <div className="grid grid-cols-1  justify-center my-16">
+                </div> */}
+                {/* <div className="grid grid-cols-1  justify-center my-16">
                     <img className="h-12 m-auto mb-3" src={Image5} alt=""/>
-                    <p className="text-xl text-center">Drinks</p>
                     
-                </div>
+                </div> */}
             </div>
         </div>   
     )

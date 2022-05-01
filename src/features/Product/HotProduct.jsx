@@ -4,11 +4,12 @@ import { getAllProduct } from "api/productApi";
 import { formatCurrency } from "app/format";
 import { useParams } from "react-router-dom";
 import { addToCard } from "features/Cart/cartSlice";
-import { useSelector,useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router";
 import { Modal } from "react-responsive-modal";
 import "react-responsive-modal/styles.css";
 import { Link } from "react-router-dom";
+import StarRatings from "react-star-ratings";
 function ImageInSlider({ picture, handleChangeImage }) {
   return (
     <div class="owl-item" style={{ width: "108px" }}>
@@ -36,13 +37,12 @@ function HotProduct(props) {
   //=========add to cart
   const dispatch = useDispatch();
   const history = useHistory();
-  const cart = useSelector((state)=>state.cart);
-  const handleAddToCart = (product,cart) => {
-    if(product.SoLuong>0){
+  const cart = useSelector((state) => state.cart);
+  const handleAddToCart = (product, cart) => {
+    if (product.SoLuong > 0) {
       dispatch(addToCard({ ...product, quantity: amount }));
-    history.push("/cart");
+      history.push("/cart");
     }
-    
   };
   //============
 
@@ -55,24 +55,22 @@ function HotProduct(props) {
   });
   const [pictures, setPictures] = useState([]);
   const [currentPic, setCurrentPic] = useState({});
-  useEffect(
-    () => {
-      const fetchProductList = async () => {
-        try {
-          const response = await getAllProduct(params);
-          setProductList(response.result.data);
-        } catch (error) {
-          console.log("Failed to fetch product list: ", error);
-        }
-      };
-      fetchProductList();
-    },
-    [],
-  );
+  useEffect(() => {
+    const fetchProductList = async () => {
+      try {
+        const response = await getAllProduct(params);
+        setProductList(response.result.data);
+      } catch (error) {
+        console.log("Failed to fetch product list: ", error);
+      }
+    };
+    fetchProductList();
+  }, []);
 
   const [open, setOpen] = useState(false);
   const [currentProduct, setCurrentProduct] = useState(null);
   const handleModal = (value) => {
+    console.log(value)
     setCurrentProduct(value);
     setPictures(value.AnhMoTa);
     setCurrentPic(value.AnhMoTa[0]);
@@ -124,7 +122,7 @@ function HotProduct(props) {
           infinite: true,
         },
       },
-      
+
       {
         breakpoint: 700,
         settings: {
@@ -165,7 +163,11 @@ function HotProduct(props) {
                     src={product.AnhMoTa[0].source}
                     alt={product.TenSanPham}
                   />
-                  {product.SoLuong<1&&(<div className="absolute top-6 left-1 "><span className="text-red-500">Out stock</span></div>)}
+                  {product.SoLuong < 1 && (
+                    <div className="absolute top-6 left-1 ">
+                      <span className="text-red-500">Out stock</span>
+                    </div>
+                  )}
                   <div className=" absolute  opacity-0 group-hover:opacity-100 flex transition-all duration-500 flex-wrap items-center justify-center ">
                     <div className="text-center">
                       <button
@@ -186,8 +188,8 @@ function HotProduct(props) {
                 <div className="py-5 px-5">
                   <div className="hover:text-yellow-400 text-lg text-center capitalize-first h-14">
                     <Link to={`/products/${product.slug}`}>
-                                {product.TenSanPham}
-                              </Link>
+                      {product.TenSanPham}
+                    </Link>
                   </div>
                   <div className=" text-center">
                     {formatCurrency(product.DonGia)}
@@ -201,7 +203,7 @@ function HotProduct(props) {
           <div
             id="product-page"
             className="container "
-            style={{width:'auto'}}
+            style={{ width: "auto" }}
           >
             <div className="row">
               <div id="content" className="col-sm-12">
@@ -298,7 +300,13 @@ function HotProduct(props) {
                   <div class="col-sm-6">
                     <div class="right_info">
                       <h1 class="">{currentProduct?.TenSanPham}</h1>
-
+                      <StarRatings
+                        rating={currentProduct?.averageRating}
+                        numberOfStars={5}
+                        starRatedColor="rgb(245, 171, 30)"
+                        starDimension="15px"
+                        starSpacing="2px"
+                      />
                       <hr />
 
                       <ul class="list-unstyled">

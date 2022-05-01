@@ -137,6 +137,7 @@ function ProductDetail() {
   const [comments, setComments] = useState([]);
   const [id, setId] = useState("");
   const [rating, setRating] = useState(0);
+  const [commented, setCommented] = useState(false);
   const commentBegin = {
     rating: 0,
     content: "",
@@ -156,8 +157,15 @@ function ProductDetail() {
         setPictures(response.data.AnhMoTa);
         setCurrentPic(response.data.AnhMoTa[0]);
         setcurrentDm(response.data.DanhMucSP._id);
-        console.log(response.data.Comments);
-        setComments(response.data.Comments);
+        if(response.data?.Comments && response.data?.Comments.length && user) {
+          response.data?.Comments.forEach(p => {
+            if(p.email == user.email) {
+              setCommented(true);
+              console.log("Commented")
+            }
+          })
+        }
+        setComments(response.data?.Comments);
         setRating(response.data.averageRating);
         const response2 = await getAllProduct({
           DanhMucSP: currentDm,
@@ -481,13 +489,14 @@ function ProductDetail() {
                         </div>
                       </div>
                     ))}
+                    {comments.length == 0 && <p className="text-center">Chưa có bình luận nào</p>}
                   </div>
                 </div>
               </div>
             </div>
             {user && (
               <div className="col-sm-12 border p-4 mb-24">
-                <Formik
+                {commented ? <Formik
                   validationSchema={validateSchema}
                   initialValues={commentBegin}
                   onSubmit={onFinish}
@@ -524,7 +533,7 @@ function ProductDetail() {
                             <textarea
                               name=""
                               id=""
-                              className="w-full outline-none p-4"
+                              className="w-full outline-none p-4 border rounded-md"
                               rows="10"
                               value={values.content}
                               onChange={(e) => {
@@ -566,7 +575,7 @@ function ProductDetail() {
                       </Form>
                     );
                   }}
-                </Formik>
+                </Formik> : <p className="text-center font-bold">Đã bình luận</p>}
               </div>
             )}
             {relateProduct.length > 0 && (

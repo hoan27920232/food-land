@@ -225,7 +225,7 @@ function CheckoutForm(props) {
             </div>
           )}
           <div className="w-full border bg-white border-dashed border-gray-300 px-6 py-3 mb-4 text-xl uppercase">
-            Form checkout
+            Checkout
           </div>
           <div className="w-full border bg-white border-dashed border-gray-300 pt-12">
             <Formik
@@ -250,13 +250,13 @@ function CheckoutForm(props) {
                     <FastField
                       name="address"
                       component={InputField}
-                      label="Address(*)"
-                      placeholder="Address"
+                      label="Địa chỉ(*)"
+                      placeholder="Địa chỉ"
                     />
                     <div className="flex pb-10">
                       <div className="ml-8">
                         <label htmlFor="city" className="mr-2">
-                          City
+                          Thành phố
                         </label>
                         <Field
                           id="city"
@@ -275,6 +275,7 @@ function CheckoutForm(props) {
                             padding: "1px 5px",
                           }}
                         >
+                          <option value="">Chọn thành phố</option>
                           {cities.map((city) => (
                             <option key={city.id} value={city.id}>
                               {city.id} {city.name}
@@ -292,7 +293,7 @@ function CheckoutForm(props) {
                       </div>
                       <div className="ml-8">
                         <label htmlFor="district" className="mr-2">
-                          District
+                          Quận/Huyện
                         </label>
                         <Field
                           id="district"
@@ -310,7 +311,7 @@ function CheckoutForm(props) {
                             padding: "1px 5px",
                           }}
                         >
-                          <option value="">Select district</option>
+                          <option value="">Chọn Quận/huyện</option>
 
                           {districts.map((district) => (
                             <option key={district.id} value={district.id}>
@@ -323,13 +324,13 @@ function CheckoutForm(props) {
                           touched?.shippingAddress?.district &&
                           errors?.shippingAddress?.district && (
                             <p className="text-red-700 text-center">
-                              Chưa có tỉnh
+                              Chưa có Quận/huyện
                             </p>
                           )}
                       </div>
                       <div className="ml-8">
                         <label htmlFor="ward" className="mr-2">
-                          District
+                          Xã
                         </label>
                         <Field
                           id="ward"
@@ -345,7 +346,7 @@ function CheckoutForm(props) {
                             padding: "1px 5px",
                           }}
                         >
-                          <option value="">Select ward</option>
+                          <option value="">Chọn xã</option>
 
                           {wards.map((ward) => (
                             <option key={ward.id} value={ward.id}>
@@ -383,7 +384,7 @@ function CheckoutForm(props) {
                               <div className="flex flex-wrap items-center">
                                 <div className="relative w-full max-w-full flex-grow flex-1">
                                   <h3 className="font-semibold text-base text-blueGray-700">
-                                    List product
+                                    Danh sách sản phẩm
                                   </h3>
                                 </div>
                               </div>
@@ -394,19 +395,19 @@ function CheckoutForm(props) {
                                 <thead>
                                   <tr>
                                     <th className="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
-                                      Image
+                                      Ảnh
                                     </th>
                                     <th className="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
-                                      Name product
+                                      Tên sản phẩm
                                     </th>
                                     <th className="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
-                                      Price
+                                      Gía
                                     </th>
                                     <th className="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
-                                      Quantity
+                                      Số lượng
                                     </th>
                                     <th className="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
-                                      Total
+                                     Tổng tiền
                                     </th>
                                   </tr>
                                 </thead>
@@ -442,7 +443,7 @@ function CheckoutForm(props) {
                               </table>
                             </div>
                             <div className="text-right uppercase font-bold mr-14 mb-4">
-                              Total: {formatCurrency(total)}
+                              Tổng tiền: {formatCurrency(total)}
                             </div>
                           </div>
                         </div>

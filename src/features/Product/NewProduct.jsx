@@ -9,6 +9,7 @@ import { useHistory } from "react-router";
 import { Modal } from "react-responsive-modal";
 import "react-responsive-modal/styles.css";
 import { Link } from "react-router-dom";
+import StarRatings from "react-star-ratings";
 function ImageInSlider({ picture, handleChangeImage }) {
   return (
     <div class="owl-item" style={{ width: "108px" }}>
@@ -297,7 +298,13 @@ function NewProduct(props) {
                   <div class="col-sm-6">
                     <div class="right_info">
                       <h1 class="">{currentProduct?.TenSanPham}</h1>
-
+                      <StarRatings
+                        rating={currentProduct?.averageRating}
+                        numberOfStars={5}
+                        starRatedColor="rgb(245, 171, 30)"
+                        starDimension="15px"
+                        starSpacing="2px"
+                      />
                       <hr />
 
                       <ul class="list-unstyled">

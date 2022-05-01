@@ -133,7 +133,7 @@ function Aside(props) {
     <>
       <div className="category-list">
         <div className="box-category">
-          <h3 className="toggled relative">Categories</h3>
+          <h3 className="toggled relative">Danh mục</h3>
           <ul className="list-unstyled parent" id="selectMe-desk">
             {categoryList.map((category) => {
               return (
@@ -150,11 +150,11 @@ function Aside(props) {
           </ul>
         </div>
       </div>
-      {filter !== undefined ? (
+      {filter ? (
         <div class="panel panel-default filter">
           <div class="box-content">
             <div id="filter">
-              <h3 class="panel-heading toggled">Refine Search</h3>
+              <h3 class="panel-heading toggled">Lọc</h3>
               <div class="filter_box" style={{ display: "block" }}>
                 <div class="list-group list-group-filter">
                   <div class="list-group-items">
@@ -210,7 +210,7 @@ function Aside(props) {
                     class="btn btn-primary"
                     onClick={handleFilterPrice}
                   >
-                    Refine Search
+                    Lọc
                   </button>
                 </div>
               </div>
@@ -220,7 +220,7 @@ function Aside(props) {
       ) : null}
       <div className="box-content special">
         <div className="page-title toggled">
-          <h3>Specials</h3>
+          <h3>Sản phẩm đặc biệt</h3>
         </div>
         <div
           className="block_box row"
