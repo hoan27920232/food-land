@@ -17,14 +17,13 @@ function Contact(props) {
                       <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-lg rounded ">
                         <div className="rounded-t mb-0 px-4 py-3 border-0 flex-row lg:flex lg:flex-col-2">
                           <div className="rounded-t mb-0 px-6 py-4 border-0 m-6 lg:w-1/2">
-                            <p className="text-2xl lg:text-4xl py-4">Information</p>
+                            <p className="text-2xl lg:text-4xl py-4">Thông tin</p>
                             <div className="text-base lg:text-xl space-y-3">
                               <p>
-                              <span className="ml-0 underline">Tên đề tài:</span><span className="italic ">Đề tài xây dựng website bán đồ ăn </span>
+                              <span className="ml-0 underline">Tên đề tài:</span><span className="italic ">Đề tài xây dựng website bán thực phẩm Tây Bắc </span>
                               </p>
-                              <p>Người thực hiện đề tài: Đỗ Bá Hoàn</p>
+                              <p>Người thực hiện đồ án: Đỗ Bá Hoàn</p>
                               <p>GVHD: ThS Vũ Đức Huy</p>
-                              <p>Người hướng dẫn ở doanh nghiệp: Nguyễn Văn Đạt</p>
                             </div>
                           </div>
                           <div className="flex flex-wrap items-center lg:w-1/2">

@@ -15,26 +15,26 @@ function AsideAccountInside() {
 	return (
 		<div className="category-list">
             <div className="box-category">
-                <h3 className="toggled relative">ACCOUNT</h3>
+                <h3 className="toggled relative">TÀI KHOẢN</h3>
                 <ul className="list-unstyled parent" id="selectMe-desk">
                     <li className="">
                         <Link to="/account">
-                            <a className="list-group-item ">User Information<span></span></a>
+                            <a className="list-group-item ">Thông tin tài khoản<span></span></a>
                         </Link>
                     </li>
                     <li className="">
                         <Link to="/account/history-purchase">
-                            <a className="list-group-item ">History purchase<span></span></a>
+                            <a className="list-group-item ">Lịch sử mua hàng<span></span></a>
                         </Link>
                     </li>
                     <li className="">
                         <Link to="/account/change-password">
-                            <a className="list-group-item ">change password<span></span></a>
+                            <a className="list-group-item ">Đổi mật khẩu<span></span></a>
                         </Link>
                     </li>
                     <li className="">
                         <Link to="/account">
-                            <a className="list-group-item " onClick={()=> {handleLogout()}}>Log out<span></span></a>
+                            <a className="list-group-item " onClick={()=> {handleLogout()}}>Đăng xuất<span></span></a>
                         </Link>
                     </li>
                 </ul>

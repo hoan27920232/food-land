@@ -35,7 +35,7 @@ function Cart() {
 
                       {cart.cartItems.length===0 ?(
                         <div className="h-80 text-center text-2xl flex-col flex items-center justify-center border bg-white border-dashed border-gray-300 mb-6">
-                        <p>Your cart is currently empty !</p>
+                        <p>Giỏ hàng rỗng !</p>
                         <Link className="btn-yellow text-sm mt-2" to="/products">Back to shop</Link>
                         </div>
                       ):(
@@ -44,7 +44,7 @@ function Cart() {
                           <div className="flex flex-wrap items-center">
                             <div className="relative w-full max-w-full flex-grow flex-1">
                               <h3 className="font-semibold text-base text-blueGray-700">
-                                List product
+                                Danh sách sản phẩm
                               </h3>
                             </div>
                           </div>
@@ -55,19 +55,19 @@ function Cart() {
                             <thead>
                               <tr>
                                 <th className="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
-                                  Image
+                                  Ảnh
                                 </th>
                                 <th className="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
-                                  Name product
+                                 Tên sản phẩm
                                 </th>
                                 <th className="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
-                                  Price
+                                  Giá
                                 </th>
                                 <th className="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
-                                  Quantity
+                                  Số lượng
                                 </th>
                                 <th className="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
-                                  Total
+                                  Tổng tiền
                                 </th>
                                 <th className="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
                                   Action
@@ -103,7 +103,7 @@ function Cart() {
                                     </td>
                                     <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
                                         <button className="btn-yellow" onClick={()=>handleRemoveFromCart(cartItem)}>
-                                          Remove
+                                          Xóa
                                         </button>
                                     </td>
                                   </tr>
@@ -112,7 +112,7 @@ function Cart() {
                           </table>
                         </div>
                         <div className="text-right uppercase font-bold mr-14 mb-4">
-                          <div className="py-3">Total: {formatCurrency(cart.cartTotalAmount)}</div>
+                          <div className="py-3">Tổng tiền: {formatCurrency(cart.cartTotalAmount)}</div>
                           <Link className="btn-yellow" to="/checkout">Check Out</Link>
                         </div>
                       </div>

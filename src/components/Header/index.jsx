@@ -264,10 +264,10 @@ function MiddleHeader() {
                 <i className="fa fa-shopping-cart"></i>
               </div>
               <div className="cart-total">
-                <div>My Cart</div>
+                <div>Giỏ hàng</div>
                 <div className="cart-total-info space-x-1">
                   <div>
-                    {cartTotalQuantity} items
+                    {cartTotalQuantity} sản phẩm
                   </div>
                   <p>-</p>
                   <div>{formatCurrency(cartTotalAmount)}</div>
@@ -287,19 +287,19 @@ function MiddleHeader() {
                         <thead>
                           <tr>
                             <th className="px-6 bg-blueGray-50 text-blueGray-500 align-middle  py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
-                              Image
+                              Ảnh
                             </th>
                             <th className="px-6 bg-blueGray-50 text-blueGray-500 align-middle  border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
-                              Name product
+                              Tên sản phẩm
                             </th>
                             <th className="px-6 bg-blueGray-50 text-blueGray-500 align-middle  border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
-                              Price
+                              Giá
                             </th>
                             <th className="px-6 bg-blueGray-50 text-blueGray-500 align-middle border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
-                              Quantity
+                              Số lượng
                             </th>
                             <th className="px-6 bg-blueGray-50 text-blueGray-500 align-middle  border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
-                              Total
+                              Tổng tiền
                             </th>
                           </tr>
                         </thead>
@@ -338,7 +338,7 @@ function MiddleHeader() {
                       </table>
                       <div className="text-right uppercase font-bold mr-14 mb-4">
                         <div className="py-3">
-                          Total: {formatCurrency(cartTotalAmount)}
+                          Tổng tiền: {formatCurrency(cartTotalAmount)}
                         </div>
                         <div className="space-x-6">
                           <button

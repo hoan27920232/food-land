@@ -170,9 +170,9 @@ function MiddleHeader() {
                 <i className="fa fa-shopping-cart"></i>
               </div>
               <div className="text-left">
-                <div>My Cart</div>
+                <div>Giỏ hàng</div>
                 <div className="flex flex-col-2 space-x-1">
-                  <div>{cartTotalQuantity} items</div>
+                  <div>{cartTotalQuantity} sản phẩm</div>
                   <p className="hidden sm:block">-</p>
                   <div className="hidden sm:block">{formatCurrency(cartTotalAmount)}</div>
                 </div>

@@ -42,7 +42,7 @@ function FooterDesktop() {
                 <div className="container" style={{display: "flex", justifyContent: "space-between", flexWrap: "wrap"}}>
                   <div className="flex flex-col text-white space-y-2 lg:space-y-4" style={{marginBottom: "20px"}}>
                     <div className="text-lg text-yellow-400">
-                        Contact
+                        Liên hệ
                     </div>
                     <div className="flex space-x-2 items-center">
                       <i className="fas fa-paper-plane"></i>
@@ -78,40 +78,37 @@ function FooterDesktop() {
                   </div>
                   <div className="flex flex-col text-white space-y-4" style={{marginBottom: "20px"}}>
                     <div className="text-lg text-yellow-400">
-                        Information
+                        Thông tin
                     </div>
                     <div className="flex space-x-2 items-center">
-                      <p>About us</p>
+                      <p>Về trang web</p>
                     </div>
                     <div className="flex space-x-2 items-center">
-                      <p>Delivery Information</p>
+                      <p>Thông tin vận chuyện</p>
                     </div>
                     <div className="flex space-x-2 items-center">
-                      <p>Term and Condition</p>
+                      <p>Điều khoản hoàn trả</p>
                     </div>
                     
                   </div>
                   <div className="flex flex-col text-white space-y-4" style={{marginBottom: "20px"}}>
                     <div className="text-lg text-yellow-400">
-                        Service
+                        Dịch vụ
                     </div>
                     <div className="flex space-x-2 items-center">
-                      <p>Brands</p>
-                    </div>
-                    <div className="flex space-x-2 items-center">
-                    
-                      <p>Gift Certificates</p>
+                      <p>Thương hiệu</p>
                     </div>
                     <div className="flex space-x-2 items-center">
                     
-                      <p>Contact US</p>
+                      <p>Qùa tặng</p>
                     </div>
+      
                     
                   </div>
 
                     <div className="flex flex-col text-white space-y-4" style={{marginBottom: "20px"}}>
                       <div className="text-lg text-yellow-400">
-                          Payment
+                          Thanh toán
                       </div>
                       <div className="flex space-x-2 items-center">
                         <img src={Momo} style={{width:"40px", height:"40px"}} alt="#"/>

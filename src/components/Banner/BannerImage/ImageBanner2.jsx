@@ -30,7 +30,7 @@ function ImageBanner2() {
                 className="blog-read btn bg-yellow-500"
                 title="Read More"
               >
-                Oder Now
+                Mua ngay
               </Link>
             </div>
           </div>

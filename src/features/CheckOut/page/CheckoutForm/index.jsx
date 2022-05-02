@@ -14,6 +14,7 @@ import cod from "../../../../assets/images/cod.png";
 import { me } from "api/userApi";
 import { createOrder } from "api/orderApi";
 import axios from "axios";
+import InputArea from "components/InputArea";
 
 CheckoutForm.propTypes = {};
 
@@ -69,6 +70,7 @@ function CheckoutForm(props) {
               data?.shippingAddress?.ward?.id &&
               data?.shippingAddress?.ward?.id,
           },
+          note:  data && data.note && data.note
         });
       });
     }
@@ -92,6 +94,7 @@ function CheckoutForm(props) {
       district: Yup.string().required(),
       ward: Yup.string().required(),
     }),
+    note: Yup.string()
   });
   const handlePayment = (value) => {
     setPayment(value);
@@ -158,6 +161,7 @@ function CheckoutForm(props) {
         district: district,
         ward: ward
       },
+      note: values.note,
       shipMoney: res.data?.ship?.fee?.fee || 0,
     };
     console.log(finalData)
@@ -375,6 +379,12 @@ function CheckoutForm(props) {
                       component={InputField}
                       label="Phone(*)"
                       placeholder="Phone"
+                    />
+                     <FastField
+                      name="note"
+                      component={InputArea}
+                      label="Note"
+                      placeholder="Note"
                     />
                     <div className="w-full">
                       <section className="py-1 bg-blueGray-50">

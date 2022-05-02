@@ -143,7 +143,7 @@ function ListBlogByCategory() {
                                                     {blog.TomTat.length > 40 ? blog.TomTat.substring(0,40) + '...' : blog.TomTat}
                                                 </div>
                                                 <div class="blog-group clearfix">	
-                                                    <Link to={`/blogs/${blog.slug}`} class="blog-read btn" title="Read More">Read More</Link>
+                                                    <Link to={`/blogs/${blog.slug}`} class="blog-read btn" title="Read More">ĐỌC THÊM</Link>
                                                 </div>
                                             </div> 
                                         </div>

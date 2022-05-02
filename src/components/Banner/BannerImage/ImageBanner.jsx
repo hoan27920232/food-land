@@ -48,7 +48,7 @@ function ImageBanner() {
                 <div className="mx-3 my-2 md:mx-3 md:my-3 sm:mx-12 sm:my-4  absolute xl:mx-8  xl:my-14 2xl:mx-16 2xl:my-12 space-y-4">
                     <div className=" lg:text-xl text-white xl:text-2xl">{settings?.text}</div>
                     <div>
-                      <Link to={settings?.url} className="blog-read btn bg-yellow-500" title="Read More">Oder Now</Link>
+                      <Link to={settings?.url} className="blog-read btn bg-yellow-500" title="Read More">Mua ngay</Link>
                     </div>
                 </div>
 
@@ -63,7 +63,7 @@ function ImageBanner() {
               <div className=" mx-3 my-2 md:mx-3 md:my-3 sm:mx-12 sm:my-4  absolute xl:mx-8 xl:my-14  2xl:mx-16 2xl:my-12 space-y-4">
                   <div className=" lg:text-xl text-white xl:text-2xl">{setting2?.text}</div>
                   <div>
-                    <Link to={setting2?.url} className="blog-read btn bg-yellow-500" title="Read More">Oder Now</Link>
+                    <Link to={setting2?.url} className="blog-read btn bg-yellow-500" title="Read More">Mua ngay</Link>
                   </div>
               </div>
           </div>

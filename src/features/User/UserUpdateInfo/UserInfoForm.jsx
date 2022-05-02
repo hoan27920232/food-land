@@ -149,7 +149,7 @@ function UserInfoForm(props) {
                 <div id="content" className="col-sm-9">
                   <div className="row">
                     <div className="well">
-                      <h2>User Information</h2>
+                      <h2>Thông tin tài khoản</h2>
                       <div class="form-horizontal">
                         <fieldset id="account">
                           <div class="form-group required">

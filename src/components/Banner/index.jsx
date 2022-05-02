@@ -47,7 +47,9 @@ function Banner(props) {
               settings.length &&
               settings.map((img, index) => (
                 <div className="each-slide" key={index}>
+                  <a href={img?.url}>
                   <img src={img?.image} alt="" className="selector w-full object-cover" />
+                  </a>
                 </div>
               ))}
           </Slide>

@@ -10,7 +10,7 @@ function BlogItem({blog}) {
             <div className="py-5 px-5 border-dashed border border-gray-300" >
                 <div className="py-3 hover:text-yellow-400 text-xl">{blog.title}</div>
                 <div className="py-3 w-full">{blog.content}</div>
-                <button className="bg-black text-xs hover:bg-yellow-400 w-30 h-10 text-white flex items-center justify-center rounded-full py-3 px-6 ">READ MORE</button>
+                <button className="bg-black text-xs hover:bg-yellow-400 w-30 h-10 text-white flex items-center justify-center rounded-full py-3 px-6 ">ĐỌC THÊM</button>
             </div>
         </div>
     )

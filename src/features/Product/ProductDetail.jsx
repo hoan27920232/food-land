@@ -229,7 +229,13 @@ function ProductDetail() {
   const onOpenModal = () => setOpen(true);
   const onCloseModal = () => setOpen(false);
   const onFinish = async (values) => {
-    console.log("Hello");
+    if(commented?.length == 0) {
+      console.log(values.rating)
+      setRating(values.rating);
+    } else {
+      console.log(values.rating)
+      setRating((rating * commented.length + values.rating) / (commented.length + 1))
+    }
     values = {
       ...values,
       name: user.TenKhachHang,
@@ -239,6 +245,7 @@ function ProductDetail() {
     const post = await postComment(id, values)
       .then((data) => {
         setComments([...comments, values]);
+        setCommented(true)
       })
       .catch((err) => console.log(err));
   };
@@ -348,7 +355,7 @@ function ProductDetail() {
                   <h1 class="">{productList.TenSanPham}</h1>
                   <div>
                     <StarRatings
-                      rating={rating}
+                      rating={rating || 5}
                       numberOfStars={5}
                       starRatedColor="rgb(245, 171, 30)"
                       starDimension="20px"
@@ -476,7 +483,7 @@ function ProductDetail() {
                           <div>
                             <p>{p.email}</p>
                             <StarRatings
-                              rating={p.rating}
+                              rating={p?.rating || 5}
                               numberOfStars={5}
                               starRatedColor="rgb(245, 171, 30)"
                               starDimension="15px"
@@ -496,7 +503,7 @@ function ProductDetail() {
             </div>
             {user && (
               <div className="col-sm-12 border p-4 mb-24">
-                {commented ? <Formik
+                {!commented ? <Formik
                   validationSchema={validateSchema}
                   initialValues={commentBegin}
                   onSubmit={onFinish}
