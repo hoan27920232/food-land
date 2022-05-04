@@ -160,7 +160,7 @@ function UserInfoForm(props) {
                               placeholder="Name"
                               id="input-name"
                               class="form-control margin-bottom-20px"
-                              label="Name"
+                              label="Họ tên"
                             />
                           </div>
                           <div class="form-group required">
@@ -171,7 +171,7 @@ function UserInfoForm(props) {
                               placeholder="Address"
                               id="input-address"
                               class="form-control margin-bottom-20px"
-                              label="Address"
+                              label="Địa chỉ"
                             />
                           </div>
                           <div className="flex mb-10">
@@ -315,7 +315,7 @@ function UserInfoForm(props) {
                               placeholder="Date of birth"
                               id="input-dob"
                               class="form-control margin-bottom-20px"
-                              label="Birthday"
+                              label="Ngày sinh"
                             />
                           </div>
                         </fieldset>
@@ -355,7 +355,7 @@ function UserInfoForm(props) {
                                   />
                                 </svg>
                               )}
-                              Update
+                              Cập nhật
                             </button>
                           </div>
                         </div>

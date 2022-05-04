@@ -12,7 +12,7 @@ import { useHistory } from "react-router";
 import momo from "../../../../assets/images/momo.png";
 import cod from "../../../../assets/images/cod.png";
 import { me } from "api/userApi";
-import { createOrder } from "api/orderApi";
+import { checkDiscount, createOrder } from "api/orderApi";
 import axios from "axios";
 import InputArea from "components/InputArea";
 
@@ -37,6 +37,10 @@ function CheckoutForm(props) {
   const [wards, setWards] = useState([]);
   const ref = useRef(null);
   const [load, setLoad] = useState(false);
+  const [idDiscount, setIdDiscount] = useState('');
+  const [text, setText] = useState('');
+  const [code, setCode] = useState("");
+  const [display, setDisplay] = useState(false);
   useEffect(() => {
     if (localStorage.getItem("cartItems")) {
       setCartProduct(JSON.parse(localStorage.getItem("cartItems")));
@@ -70,7 +74,8 @@ function CheckoutForm(props) {
               data?.shippingAddress?.ward?.id &&
               data?.shippingAddress?.ward?.id,
           },
-          note:  data && data.note && data.note
+          note:  '',
+          MaDiscount: ''
         });
       });
     }
@@ -94,7 +99,8 @@ function CheckoutForm(props) {
       district: Yup.string().required(),
       ward: Yup.string().required(),
     }),
-    note: Yup.string()
+    note: Yup.string(),
+    discount: Yup.string()
   });
   const handlePayment = (value) => {
     setPayment(value);
@@ -112,6 +118,43 @@ function CheckoutForm(props) {
       `${process.env.REACT_APP_API_URL}ghtk/vnlocations/${ref?.current?.values?.shippingAddress?.district}`
     );
     setWards(res3.data);
+  };
+  const discountChange = (e) => {
+    setCode(e.target.value);
+  };
+  const checkDiscountFunction = async () => {
+    const now = new Date()
+    let check;
+    if (code) {
+      try{
+        check = await checkDiscount(code);
+      }catch(err){
+
+      }
+    }
+    if(check && check.data) {
+      if(Date.parse(check.data.startDate) > Date.parse(now))
+      {
+        setText("Chưa đến thời điểm code được sử dụng")
+      }
+      else if(Date.parse(check.data.endDate) < Date.parse(now)) {
+        setText("Hết thời điểm code được sử dụng")
+      }
+      else if(!check.data.active) {
+        setText("Code đã bị vô hiệu hóa")
+      }
+      else if(check.data.discount == 0) {
+        setText("Code không có tỉ lệ giảm giá")
+      }
+      else{
+        setText("Áp dụng code thành công bạn được giảm giá " + check.data.discount + " phần trăm")
+        setTotal(total * (100 - check.data.discount) / 100)
+        setIdDiscount(check.data._id)
+      }
+    }else {
+      setText("Code bạn nhập không đúng")
+    }
+    setDisplay(true);
   };
   const onSubmit = async (values) => {
     const city = formatAddress(
@@ -163,6 +206,8 @@ function CheckoutForm(props) {
       },
       note: values.note,
       shipMoney: res.data?.ship?.fee?.fee || 0,
+      MaDiscount: idDiscount,
+
     };
     console.log(finalData)
     const action = await createOrder(finalData)
@@ -386,6 +431,25 @@ function CheckoutForm(props) {
                       label="Note"
                       placeholder="Note"
                     />
+                    <div className="grid grid-cols-12 pl-12 w-full">
+                      <div className="col-span-1 flex items-center">
+                        Discount
+                      </div>
+                      <input
+                        className={`border-2 col-start-3 col-span-7 border-gray-500 border-dotted rounded-full py-2 px-3 outline-none`}
+                        value={code}
+                        onChange={discountChange}
+                      />
+                      <span
+                        className="btn-yellow col-span-2 ml-3 cursor-pointer flex justify-center items-center"
+                        onClick={() => checkDiscountFunction()}
+                      >
+                        Apply
+                      </span>
+                    </div>
+                    <div className="w-full ml-12 mt-2">
+                      <span className="w-10/12 float-right">{text}</span>
+                    </div>
                     <div className="w-full">
                       <section className="py-1 bg-blueGray-50">
                         <div className="w-full mb-12 xl:mb-0 px-4 mx-auto mt-4">

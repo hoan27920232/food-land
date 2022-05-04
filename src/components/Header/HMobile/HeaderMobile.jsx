@@ -92,7 +92,7 @@ function TopHeader() {
                 {token != "" ? (
                   <ul className="acount-cart-items" onClick={() => setsideAccount((sideAccount) => !sideAccount)}>
                     <li>
-                      <Link to="/account">Account information</Link>
+                      <Link to="/account">Thông tin cá nhân</Link>
                     </li>
                     <li>
                       <a className="cursor-pointer" onClick={()=> {handleLogout()}}>Logout</a>

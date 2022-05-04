@@ -133,7 +133,7 @@ function ListBlog() {
                                                         <img src={blog.IDAnh.source} alt={blog.TieuDe} title={blog.TieuDe} class="img-responsive object-cover" style={{height: "280px"}}/>
                                                     </Link>
                                                     <span class="block-date">
-                                                        {moment(blog.CreatedAt).format("ll")}
+                                                        {moment(blog.CreatedAt).format("DD/MM/yyyy")}
                                                     </span>        
                                                 </div>
                                             </div>

@@ -81,13 +81,13 @@ function FooterDesktop() {
                         Thông tin
                     </div>
                     <div className="flex space-x-2 items-center">
-                      <p>Về trang web</p>
+                    <a href='/contacts#ve-trang-web' className='text-white'>Về trang web</a>
                     </div>
                     <div className="flex space-x-2 items-center">
-                      <p>Thông tin vận chuyện</p>
+                      <a href='/contacts#thong-tin-van-chuyen' className='text-white'>Thông tin vận chuyện</a>
                     </div>
                     <div className="flex space-x-2 items-center">
-                      <p>Điều khoản hoàn trả</p>
+                    <a href='/contacts#dieu-khoan-hoan-tra' className='text-white'>Điều khoản hoàn trả</a>
                     </div>
                     
                   </div>
@@ -96,11 +96,12 @@ function FooterDesktop() {
                         Dịch vụ
                     </div>
                     <div className="flex space-x-2 items-center">
-                      <p>Thương hiệu</p>
+                    <a href='/contacts#thuong-hieu' className='text-white'>Thương hiệu</a>
+
                     </div>
                     <div className="flex space-x-2 items-center">
                     
-                      <p>Qùa tặng</p>
+                    <a href='/contacts#qua-tang' className='text-white'>Qùa tặng</a>
                     </div>
       
                     

@@ -52,7 +52,7 @@ function App() {
           <Footer />
         </BrowserRouter>
       </Suspense>
-      <MessengerCustomerChat pageId="111716291318071" appId="284282986930247" />
+      <MessengerCustomerChat pageId="116840361009992" appId="2728231960654195" />
     </div>
   );
 }

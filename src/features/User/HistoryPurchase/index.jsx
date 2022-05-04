@@ -36,7 +36,7 @@ function DropDownItem({ order }) {
               <span>Tổng tiền: {formatCurrency(order.TongTien)}</span>
               <span>
                 Status:{" "}
-                {order.TrangThai && order.TrangThai == 0
+                {order.TrangThai == 0
                   ? "Đã tạo"
                   : order.TrangThai == 1
                   ? "Đã đăng đơn"

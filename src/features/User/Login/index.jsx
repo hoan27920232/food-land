@@ -114,7 +114,7 @@ function LoginForm(props) {
                         />
                         <div className="pb-3 text-right mr-14">
                         <Link to="/account/getreset">
-                            Forget password ?
+                            Quên mật khẩu ?
                         </Link>
                         </div>
                         <div className="centered">

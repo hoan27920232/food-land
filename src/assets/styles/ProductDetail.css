@@ -160,6 +160,7 @@ a.thumbnail {
 .right_info {
     background: var(--primary-hover-color);
     padding: 27px 30px 30px;
+    min-width: 400px;
 }
 
 .right_info h1, .quick-product-right h1 {
@@ -187,7 +188,6 @@ ul.list-unstyled {
 
 .right_info .disc {
     color: var(--primary-color);
-    margin-right: 5px;
     line-height: 27px;
     min-width: 125px;
     font-size: 15px;
@@ -197,7 +197,6 @@ ul.list-unstyled {
 .right_info .disc1 {
     color: var(--secondary-light-color);
     font-size: 15px;
-    margin-right: 10px;
 }
 
 .pro_price {

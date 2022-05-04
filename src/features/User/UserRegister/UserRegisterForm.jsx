@@ -148,16 +148,15 @@ function UserRegisterForm(props) {
                     <div className="well">
                       <h2>Register</h2>
                       <p>
-                        If you already have an account with us, please login at
-                        the{" "}
-                        <Link to="/account/login">
-                          <a>login page</a>
+                        Nếu bạn đã có tài khoản bạn có thể đăng nhập ở <Link to="/account/login">
+                        trang đăng nhập
                         </Link>
+                        
                         .
                       </p>
                       <div className="form-horizontal">
                         <fieldset id="account">
-                          <legend>Your Personal Details</legend>
+                          <legend>Thông tin đăng ký</legend>
                           <div className="form-group required">
                             <FastField
                               component={InputField}
@@ -165,7 +164,7 @@ function UserRegisterForm(props) {
                               name="TenKhachHang"
                               placeholder="Name"
                               id="input-name"
-                              label="Name"
+                              label="Họ tên"
                               breakDown
                             />
                           </div>
@@ -176,7 +175,7 @@ function UserRegisterForm(props) {
                               name="DiaChi"
                               placeholder="Address"
                               id="input-address"
-                              label="Address"
+                              label="Địa chỉ"
                             />
                           </div>
                           {/* <div className="form-group pl-12">
@@ -330,12 +329,12 @@ function UserRegisterForm(props) {
                               name="NgaySinh"
                               placeholder="Date of birth"
                               id="input-dob"
-                              label="Date of birth"
+                              label="Ngày sinh"
                             />
                           </div>
                         </fieldset>
                         <fieldset>
-                          <legend>Your Password</legend>
+                          <legend>Mật khẩu</legend>
                           <div className="form-group required">
                             <FastField
                               component={InputField}

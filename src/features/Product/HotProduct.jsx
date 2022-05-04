@@ -311,11 +311,11 @@ function HotProduct(props) {
 
                       <ul class="list-unstyled">
                         <li>
-                          <span class="disc">Product Code:</span>
+                          <span class="disc">Mã sản phẩm:</span>
                           <span class="disc1"> {currentProduct?.code}</span>
                         </li>
                         <li>
-                          <span class="disc">Availability:</span>
+                          <span class="disc">Số lượng còn:</span>
                           <span class="disc1">
                             {" "}
                             {currentProduct?.SoLuong > 0
@@ -339,7 +339,7 @@ function HotProduct(props) {
                       <div id="product" class="product-options">
                         <div class="form-group">
                           <label class="control-label qty" for="input-quantity">
-                            Qty
+                            
                           </label>
                           <div class="product-btn-quantity">
                             <div class="pro-quantity">
