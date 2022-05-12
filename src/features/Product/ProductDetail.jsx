@@ -495,7 +495,7 @@ function ProductDetail() {
                         </div>
                       </div>
                     ))}
-                    {comments.length == 0 && <p className="text-center">Chưa có bình luận nào</p>}
+                    {!comments && <p className="text-center">Chưa có bình luận nào</p>}
                   </div>
                 </div>
               </div>
