@@ -468,7 +468,7 @@ function ProductDetail() {
                 </ul>
                 <div className="tab-content">
                   <div className="tab-pane">
-                    {comments.map((p, i) => (
+                    {comments && comments.length && comments.map((p, i) => (
                       <div key={i} className="border-dashed	border p-3 mb-3">
                         <div className="font-bold">
                           {p.name} - {moment(p.date).format("MMM Do YY")}
