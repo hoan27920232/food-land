@@ -101,7 +101,7 @@ function FooterDesktop() {
                     </div>
                     <div className="flex space-x-2 items-center">
                     
-                    <a href='/contacts#qua-tang' className='text-white'>Qùa tặng</a>
+                    <a href='/contacts#qua-tang' className='text-white'>Quà tặng</a>
                     </div>
       
                     

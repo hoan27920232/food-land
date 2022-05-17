@@ -96,7 +96,7 @@ function Aside(props) {
       </div>
       <div className="box-content special">
         <div className="page-title toggled">
-          <h3>Sản phẩm đặc biệt</h3>
+          <h3>Sản phẩm gợi ý</h3>
         </div>
         <div
           className="block_box row"

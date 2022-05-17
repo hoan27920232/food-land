@@ -586,7 +586,7 @@ function ProductDetail() {
             )}
             {relateProduct.length > 0 && (
               <div className="py-10 ">
-                <p className=" xl:text-3xl">Relate product</p>
+                <p className=" xl:text-3xl">Sản phẩm liên quan</p>
                 <div>
                   <div>
                     <div className="relative">

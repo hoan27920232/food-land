@@ -21,6 +21,7 @@ function Home(props) {
       })
     return (
         <div className="home">
+
             <div>
                 <Banner/>
                 <div className="bg-white"><CardService/></div>
@@ -30,7 +31,7 @@ function Home(props) {
                 <div className="md:text-2xl lg:text-3xl text-left w-4/5 px-4 2xl:px-48">SẢN PHẨM HOT</div>
                 <div className="w-4/5  2xl:px-44"><HotProduct /></div>
             </div>
-            <div className="bg-white flex flex-col items-center ">
+            <div className="bg-white flex flex-col items-center">
                 <div className="w-4/5 2xl:px-44"><ImageBanner/></div>
             </div>
             <div className="py-6 flex flex-col items-center">

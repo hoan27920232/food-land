@@ -49,7 +49,6 @@ function CheckoutForm(props) {
   useEffect(() => {
     async function fectchAPI() {
       const actionMe = await me().then((data) => {
-        console.log(data, "data");
         setInitialValues({
           address: data && data.DiaChi && data.DiaChi,
           email: data && data.email && data.email,
@@ -247,6 +246,9 @@ function CheckoutForm(props) {
       setWards([]);
     }
   };
+  const onChangeWard = async (e) => {
+    
+  }
   const formatAddress = (data) => {
     return {
       id: data?.id ? data.id : null,

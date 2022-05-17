@@ -25,7 +25,7 @@ function Banner(props) {
   };
 
   const [settings, setSettings] = useState([]);
-
+  const [delay, setDelay] = useState(0);
   useEffect(() => {
     const fetchSetting = async () => {
       const data = await getSettingById("setting-banner-slide");
@@ -35,7 +35,17 @@ function Banner(props) {
     };
     fetchSetting();
   }, []);
-
+  const onDown = () => {
+    setDelay(Date.now())
+  }
+  const onUp = () => {
+    setDelay(Date.now() - delay);
+  }
+  const clickBanner = () => {
+    if(delay < 500) {
+      
+    }
+  }
   return (
     <div className="relative">
       {settings && settings.length && (
@@ -46,10 +56,10 @@ function Banner(props) {
             {settings &&
               settings.length &&
               settings.map((img, index) => (
-                <div className="each-slide" key={index}>
-                  <a href={img?.url}>
+                <div className="each-slide h-full" key={index}>
+                  <div style={{ height: '100%' }} onMouseDown={() => onDown()} onMouseUp={() => onUp()} onClick={() => clickBanner(img?.url)}>
                   <img src={img?.image} alt="" className="selector w-full object-cover" />
-                  </a>
+                  </div>
                 </div>
               ))}
           </Slide>

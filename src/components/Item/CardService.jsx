@@ -22,8 +22,8 @@ function CardService() {
                               </div>
                               </div>
                     </div>
-                    <p className="text-xl hover:text-yellow-400 text-center">Các sự kiện freeship</p>
-                    <p className="text-gray-400 text-center">Hỗ trợ freeship trong các ngày lễ</p>
+                    <p className="text-xl hover:text-yellow-400 text-center">Hỗ trợ giao hàng</p>
+                    <p className="text-gray-400 text-center">Giao hàng mọi tỉnh thành Việt Nam</p>
                 </div>
 
 

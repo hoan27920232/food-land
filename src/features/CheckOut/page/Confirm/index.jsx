@@ -13,10 +13,12 @@ function Confirm(props) {
   const search = useLocation().search;
   const [status, setStatus] = useState(false);
   const [momo, setMomo] = useState(false);
+  const [cartProduct, setCartProduct] = useState([]);
   const message = useSelector(state => state.checkout.message)
   const [isSuccess,setIsSuccess] = useState(true)
   const dispatch = useDispatch()
   useEffect(() => {
+   
     localStorage.removeItem("cartItems")
     const action = removeAllCart();
     dispatch(action)
