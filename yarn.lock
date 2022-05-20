@@ -12307,6 +12307,11 @@
   dependencies:
     "xml-name-validator" "^3.0.0"
 
+"wait@^0.4.2":
+  "integrity" "sha512-g4Uu25y9MJ3jtBcrRDDXeI/f7lBNtVmNUM3Xd78S19tm1gZutDkL/f6UEcMi/NqWvKZ74Mhrb+4LwpYbjG6XYA=="
+  "resolved" "https://registry.npmjs.org/wait/-/wait-0.4.2.tgz"
+  "version" "0.4.2"
+
 "walker@^1.0.7", "walker@~1.0.5":
   "integrity" "sha1-L3+bj9ENZ3JisYqITijRlhjgKPs="
   "resolved" "https://registry.npmjs.org/walker/-/walker-1.0.7.tgz"

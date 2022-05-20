@@ -13,16 +13,17 @@ function UserRegister() {
     const dispatch = useDispatch();
     const initialValues = {
         TenKhachHang: "",
-        DiaChi: "",
         email: "",
         SDT: "",
         password: "",
         repassword: "",
         NgaySinh: "",
-        shippingAddress: {
+        DiaChi: {
             provinceOrCity: null,
             district: null,
             ward: null,
+            DiaChiDetail: "",
+
         },
     }
     const handleSubmit =async (values) => {

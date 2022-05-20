@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import Slider from "react-slick";
 import { getAllProduct } from "api/productApi";
 import { formatCurrency } from "app/format";
-import { useParams,useLocation } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import { addToCard } from "features/Cart/cartSlice";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router";
@@ -38,11 +38,10 @@ function CheapProduct(props) {
   const dispatch = useDispatch();
   const history = useHistory();
   const handleAddToCart = (product) => {
-    if(product.SoLuong>0){
+    if (product.SoLuong > 0) {
       dispatch(addToCard({ ...product, quantity: amount }));
       history.push("/cart");
     }
-    
   };
   //============
 
@@ -55,31 +54,27 @@ function CheapProduct(props) {
   });
   const [pictures, setPictures] = useState([]);
   const [currentPic, setCurrentPic] = useState({});
-  useEffect(
-    () => {
-      const fetchProductList = async () => {
-        try {
-          const response = await getAllProduct(params);
-          setProductList(response.result.data);
-        } catch (error) {
-          console.log("Failed to fetch product list: ", error);
-        }
-      };
-      fetchProductList();
-    },
-    [],
-    
-  );
+  useEffect(() => {
+    const fetchProductList = async () => {
+      try {
+        const response = await getAllProduct(params);
+        setProductList(response.result.data);
+      } catch (error) {
+        console.log("Failed to fetch product list: ", error);
+      }
+    };
+    fetchProductList();
+  }, []);
 
   const [open, setOpen] = useState(false);
   const [currentProduct, setCurrentProduct] = useState(null);
   const handleModal = (value) => {
+    console.log(value);
     setCurrentProduct(value);
     setPictures(value.AnhMoTa);
     setCurrentPic(value.AnhMoTa[0]);
     setOpen(true);
   };
-  const onOpenModal = () => setOpen(true);
   const onCloseModal = () => setOpen(false);
 
   //======================== modal
@@ -125,7 +120,7 @@ function CheapProduct(props) {
           infinite: true,
         },
       },
-      
+
       {
         breakpoint: 700,
         settings: {
@@ -157,7 +152,7 @@ function CheapProduct(props) {
           </div>
         </div>
         <Slider ref={slideRef} {...settings} className="space">
-          {productList.map((product,_id) => (
+          {productList.map((product, _id) => (
             <div key={_id} className="px-4">
               <div className="bg-white relative">
                 <div className=" aspect-w-1 aspect-h-1 group ">
@@ -166,7 +161,11 @@ function CheapProduct(props) {
                     src={product.AnhMoTa[0].source}
                     alt={product.TenSanPham}
                   />
-                  {product.SoLuong<1&&(<div className="absolute top-6 left-1 "><span className="text-red-500">Out stock</span></div>)}
+                  {product.SoLuong < 1 && (
+                    <div className="absolute top-6 left-1 ">
+                      <span className="text-red-500">Out stock</span>
+                    </div>
+                  )}
                   <div className=" absolute  opacity-0 group-hover:opacity-100 flex transition-all duration-500 flex-wrap items-center justify-center ">
                     <div className="text-center">
                       <button
@@ -187,11 +186,22 @@ function CheapProduct(props) {
                 <div className="py-5 px-5">
                   <div className="hover:text-yellow-400 text-lg text-center capitalize-first h-14">
                     <Link to={`/products/${product.slug}`}>
-                                {product.TenSanPham}
-                              </Link>
+                      {product.TenSanPham}
+                    </Link>
                   </div>
                   <div className=" text-center">
-                    {formatCurrency(product.DonGia)}
+                    {product.GiamGia > 0 ? (
+                      <div>
+                        {formatCurrency(
+                          product.DonGia * (1 - product.GiamGia / 100)
+                        )}
+                        <span className="line-through ml-1 text-red-500">
+                          {formatCurrency(product.DonGia)}
+                        </span>
+                      </div>
+                    ) : (
+                      formatCurrency(product.DonGia)
+                    )}
                   </div>
                 </div>
               </div>
@@ -202,7 +212,7 @@ function CheapProduct(props) {
           <div
             id="product-page"
             className="container "
-            style={{width:'auto'}}
+            style={{ width: "auto" }}
           >
             <div className="row">
               <div id="content" className="col-sm-12">
@@ -328,7 +338,19 @@ function CheapProduct(props) {
                       <ul class="list-unstyled">
                         <li>
                           <span class="pro_price">
-                            {formatCurrency(currentProduct?.DonGia)}
+                            {currentProduct?.GiamGia > 0 ? (
+                              <div>
+                                {formatCurrency(
+                                  currentProduct?.DonGia *
+                                    (1 - currentProduct?.GiamGia / 100)
+                                )}
+                                <span className="line-through ml-1 text-red-500">
+                                  {formatCurrency(currentProduct?.DonGia)}
+                                </span>
+                              </div>
+                            ) : (
+                              formatCurrency(currentProduct?.DonGia)
+                            )}
                           </span>
                         </li>
                       </ul>
@@ -337,9 +359,10 @@ function CheapProduct(props) {
 
                       <div id="product" class="product-options">
                         <div class="form-group">
-                          <label class="control-label qty" for="input-quantity">
-                            
-                          </label>
+                          <label
+                            class="control-label qty"
+                            for="input-quantity"
+                          ></label>
                           <div class="product-btn-quantity">
                             <div class="pro-quantity">
                               <div class="minus-plus">

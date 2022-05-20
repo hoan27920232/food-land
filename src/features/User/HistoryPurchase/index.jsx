@@ -34,6 +34,7 @@ function DropDownItem({ order }) {
                 Ngày tạo: {moment(order.createdAt).format("DD/MM/YYYY")}
               </span>
               <span>Tổng tiền: {formatCurrency(order.TongTien)}</span>
+              <span>Ship: {formatCurrency(order.shipMoney)}</span>
               <span>
                 Status:{" "}
                 {order.TrangThai == 0

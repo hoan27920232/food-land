@@ -20,6 +20,7 @@ import * as Yup from "yup";
 import Rating from "react-rating";
 import moment from "moment";
 import StarRatings from "react-star-ratings";
+import useMetaTags from 'react-metatags-hook'
 function ImageInSlider({ picture, handleChangeImage }) {
   return (
     <div class="owl-item" style={{ width: "108px" }}>
@@ -128,6 +129,7 @@ function ProductDetail() {
   };
 
   const { slug } = useParams();
+
   const [pictures, setPictures] = useState([]);
   const [productList, setProductList] = useState([]);
   const [currentPic, setCurrentPic] = useState({});
@@ -157,19 +159,20 @@ function ProductDetail() {
         setPictures(response.data.AnhMoTa);
         setCurrentPic(response.data.AnhMoTa[0]);
         setcurrentDm(response.data.DanhMucSP._id);
-        if(response.data?.Comments && response.data?.Comments.length && user) {
-          response.data?.Comments.forEach(p => {
-            if(p.email == user.email) {
+        if (response.data?.Comments && response.data?.Comments.length && user) {
+          response.data?.Comments.forEach((p) => {
+            if (p.email == user.email) {
               setCommented(true);
-              console.log("Commented")
+              console.log("Commented");
             }
-          })
+          });
         }
         setComments(response.data?.Comments);
         setRating(response.data.averageRating);
         const response2 = await getAllProduct({
           DanhMucSP: currentDm,
         });
+        console.log(response2.result.data);
         setRelateProduct(
           response2.result.data.filter((p) => p._id != response.data._id)
         );
@@ -229,12 +232,14 @@ function ProductDetail() {
   const onOpenModal = () => setOpen(true);
   const onCloseModal = () => setOpen(false);
   const onFinish = async (values) => {
-    if(commented?.length == 0) {
-      console.log(values.rating)
+    if (commented?.length == 0 || !commented) {
+      console.log(values.rating);
       setRating(values.rating);
     } else {
-      console.log(values.rating)
-      setRating((rating * commented.length + values.rating) / (commented.length + 1))
+      console.log(values.rating);
+      setRating(
+        (rating * commented.length + values.rating) / (commented.length + 1)
+      );
     }
     values = {
       ...values,
@@ -245,10 +250,14 @@ function ProductDetail() {
     const post = await postComment(id, values)
       .then((data) => {
         setComments([...comments, values]);
-        setCommented(true)
+        setCommented(true);
+        console.log(data," Work")
       })
       .catch((err) => console.log(err));
   };
+  useMetaTags({
+    title: productList?.TenSanPham,
+  });
   return (
     <div className="product-detail-main">
       <div className="container">
@@ -382,7 +391,19 @@ function ProductDetail() {
                   <ul class="list-unstyled">
                     <li>
                       <span class="pro_price">
-                        {formatCurrency(productList.DonGia)}
+                        {productList.GiamGia > 0 ? (
+                          <div>
+                            {formatCurrency(
+                              productList.DonGia *
+                                (1 - productList.GiamGia / 100)
+                            )}
+                            <span className="line-through ml-1 text-red-500">
+                              {formatCurrency(productList.DonGia)}
+                            </span>
+                          </div>
+                        ) : (
+                          formatCurrency(productList.DonGia)
+                        )}{" "}
                       </span>
                     </li>
                   </ul>
@@ -391,9 +412,10 @@ function ProductDetail() {
 
                   <div id="product" class="product-options">
                     <div class="form-group">
-                      <label class="control-label qty" for="input-quantity">
-                        
-                      </label>
+                      <label
+                        class="control-label qty"
+                        for="input-quantity"
+                      ></label>
                       <div class="product-btn-quantity">
                         <div class="pro-quantity">
                           <div class="minus-plus">
@@ -468,120 +490,134 @@ function ProductDetail() {
                 </ul>
                 <div className="tab-content">
                   <div className="tab-pane">
-                    {comments && comments.length && comments.map((p, i) => (
-                      <div key={i} className="border-dashed	border p-3 mb-3">
-                        <div className="font-bold">
-                          {p.name} - {moment(p.date).format("MMM Do YY")}
-                        </div>
-                        <div className="flex space-x-2">
-                          <img
-                            src="https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg"
-                            className="w-10 h-10 rounded-xl"
-                            alt=""
-                          />
-                          <div>
-                            <p>{p.email}</p>
-                            <StarRatings
-                              rating={p?.rating || 5}
-                              numberOfStars={5}
-                              starRatedColor="rgb(245, 171, 30)"
-                              starDimension="15px"
-                              starSpacing="2px"
+                    {comments &&
+                      comments.length > 0 &&
+                      comments.map((p, i) => (
+                        <div key={i} className="border-dashed	border p-3 mb-3">
+                          <div className="font-bold">
+                            {p.name} - {moment(p.date).format("MMM Do YY")}
+                          </div>
+                          <div className="flex space-x-2">
+                            <img
+                              src="https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg"
+                              className="w-10 h-10 rounded-xl"
+                              alt=""
                             />
+                            <div>
+                              <p>{p.email}</p>
+                              <StarRatings
+                                rating={p?.rating || 5}
+                                numberOfStars={5}
+                                starRatedColor="rgb(245, 171, 30)"
+                                starDimension="15px"
+                                starSpacing="2px"
+                              />
+                            </div>
+                          </div>
+                          <div className="border border-dashed mt-2 p-3">
+                            {p.content}
                           </div>
                         </div>
-                        <div className="border border-dashed mt-2 p-3">
-                          {p.content}
-                        </div>
-                      </div>
-                    ))}
-                    {!comments && <p className="text-center">Chưa có bình luận nào</p>}
+                      ))}
+                    {!comments?.length && (
+                      <p className="text-center">Chưa có bình luận nào</p>
+                    )}
                   </div>
                 </div>
               </div>
             </div>
             {user && (
               <div className="col-sm-12 border p-4 mb-24">
-                {!commented ? <Formik
-                  validationSchema={validateSchema}
-                  initialValues={commentBegin}
-                  onSubmit={onFinish}
-                >
-                  {(formikProps) => {
-                    const {
-                      values,
-                      errors,
-                      touched,
-                      isSubmitting,
-                      handleChange,
-                    } = formikProps;
-                    console.log(values);
-                    return (
-                      <Form>
-                        <Field name="rating" id="rating" type="number">
-                          {({ field: { value }, form: { setFieldValue } }) => (
-                            <div className="mb-4 flex justify-center">
-                              <Rating
-                                placeholderRating={5}
-                                emptySymbol={`fa fa-star-o fa-2x`}
-                                fullSymbol={`fa fa-star fa-2x`}
-                                placeholderSymbol={`fa fa-star-o fa-2x`}
-                                onChange={(e) => {
-                                  setFieldValue("rating", e);
-                                }}
-                                initialRating={values.rating}
-                              />
-                            </div>
-                          )}
-                        </Field>
-                        <Field name="content" type="text">
-                          {({ field: { value }, form: { setFieldValue } }) => (
-                            <textarea
-                              name=""
-                              id=""
-                              className="w-full outline-none p-4 border rounded-md"
-                              rows="10"
-                              value={values.content}
-                              onChange={(e) => {
-                                setFieldValue("content", e.target.value);
-                              }}
-                            ></textarea>
-                          )}
-                        </Field>
-                        <div className="flex justify-end">
-                          <button
-                            className="btn btn-primary flex"
-                            type="submit"
-                          >
-                            {isSubmitting && (
-                              <svg
-                                className="animate-spin h-4 w-4 text-white mr-2"
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                              >
-                                <circle
-                                  className="opacity-25"
-                                  cx={12}
-                                  cy={12}
-                                  r={10}
-                                  stroke="currentColor"
-                                  strokeWidth={4}
+                {!commented ? (
+                  <Formik
+                    validationSchema={validateSchema}
+                    initialValues={commentBegin}
+                    onSubmit={onFinish}
+                  >
+                    {(formikProps) => {
+                      const {
+                        values,
+                        errors,
+                        touched,
+                        isSubmitting,
+                        handleChange,
+                      } = formikProps;
+                      console.log(values);
+                      return (
+                        <Form>
+                          <Field name="rating" id="rating" type="number">
+                            {({
+                              field: { value },
+                              form: { setFieldValue },
+                            }) => (
+                              <div className="mb-4 flex justify-center">
+                                <Rating
+                                  placeholderRating={5}
+                                  emptySymbol={`fa fa-star-o fa-2x`}
+                                  fullSymbol={`fa fa-star fa-2x`}
+                                  placeholderSymbol={`fa fa-star-o fa-2x`}
+                                  onChange={(e) => {
+                                    setFieldValue("rating", e);
+                                  }}
+                                  initialRating={values.rating}
                                 />
-                                <path
-                                  className="opacity-75"
-                                  fill="currentColor"
-                                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                                />
-                              </svg>
+                              </div>
                             )}
-                            Comment
-                          </button>
-                        </div>
-                      </Form>
-                    );
-                  }}
-                </Formik> : <p className="text-center font-bold">Đã bình luận</p>}
+                          </Field>
+                          <Field name="content" type="text">
+                            {({
+                              field: { value },
+                              form: { setFieldValue },
+                            }) => (
+                              <textarea
+                                name=""
+                                id=""
+                                className="w-full outline-none p-4 border rounded-md"
+                                rows="10"
+                                value={values.content}
+                                onChange={(e) => {
+                                  setFieldValue("content", e.target.value);
+                                }}
+                              ></textarea>
+                            )}
+                          </Field>
+                          <div className="flex justify-end">
+                            <button
+                              className="btn btn-primary flex"
+                              type="submit"
+                            >
+                              {isSubmitting && (
+                                <svg
+                                  className="animate-spin h-4 w-4 text-white mr-2"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <circle
+                                    className="opacity-25"
+                                    cx={12}
+                                    cy={12}
+                                    r={10}
+                                    stroke="currentColor"
+                                    strokeWidth={4}
+                                  />
+                                  <path
+                                    className="opacity-75"
+                                    fill="currentColor"
+                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                  />
+                                </svg>
+                              )}
+                              Comment
+                            </button>
+                          </div>
+                        </Form>
+                      );
+                    }}
+                  </Formik>
+                ) : (
+                  <p className="text-center font-bold">Đã bình luận</p>
+                )}
               </div>
             )}
             {relateProduct.length > 0 && (
@@ -648,7 +684,19 @@ function ProductDetail() {
                                     </Link>
                                   </div>
                                   <div className=" text-center">
-                                    {formatCurrency(product.DonGia)}
+                                  {product.GiamGia > 0 ? (
+                                        <div>
+                                          {formatCurrency(
+                                            product.DonGia *
+                                              (1 - product.GiamGia / 100)
+                                          )}
+                                          <span className="line-through ml-1 text-red-500">
+                                            {formatCurrency(product.DonGia)}
+                                          </span>
+                                        </div>
+                                      ) : (
+                                        formatCurrency(product.DonGia)
+                                      )}
                                   </div>
                                 </div>
                               </div>
@@ -702,7 +750,19 @@ function ProductDetail() {
                                       </Link>
                                     </div>
                                     <div className=" text-center">
-                                      {formatCurrency(product.DonGia)}
+                                      {product.GiamGia > 0 ? (
+                                        <div>
+                                          {formatCurrency(
+                                            product.DonGia *
+                                              (1 - product.GiamGia / 100)
+                                          )}
+                                          <span className="line-through ml-1 text-red-500">
+                                            {formatCurrency(product.DonGia)}
+                                          </span>
+                                        </div>
+                                      ) : (
+                                        formatCurrency(product.DonGia)
+                                      )}
                                     </div>
                                   </div>
                                 </div>
@@ -861,8 +921,24 @@ function ProductDetail() {
                                     <ul class="list-unstyled">
                                       <li>
                                         <span class="pro_price">
-                                          {formatCurrency(
-                                            currentProduct?.DonGia
+                                          {currentProduct?.GiamGia > 0 ? (
+                                            <div>
+                                              {formatCurrency(
+                                                currentProduct?.DonGia *
+                                                  (1 -
+                                                    currentProduct?.GiamGia /
+                                                      100)
+                                              )}
+                                              <span className="line-through ml-1 text-red-500">
+                                                {formatCurrency(
+                                                  currentProduct?.DonGia
+                                                )}
+                                              </span>
+                                            </div>
+                                          ) : (
+                                            formatCurrency(
+                                              currentProduct?.DonGia
+                                            )
                                           )}
                                         </span>
                                       </li>
@@ -875,9 +951,7 @@ function ProductDetail() {
                                         <label
                                           class="control-label qty"
                                           for="input-quantity"
-                                        >
-                                          
-                                        </label>
+                                        ></label>
                                         <div class="product-btn-quantity">
                                           <div class="pro-quantity">
                                             <div class="minus-plus">

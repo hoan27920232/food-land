@@ -15,6 +15,8 @@ import { Modal } from "react-responsive-modal";
 import "react-responsive-modal/styles.css";
 import Slider from "react-slick";
 import StarRatings from "react-star-ratings";
+import useMetaTags from 'react-metatags-hook'
+
 ///===================== doan code cua Modal
 function ImageInSlider({ picture, handleChangeImage }) {
   return (
@@ -39,6 +41,9 @@ function ImageInSlider({ picture, handleChangeImage }) {
 }
 //===================
 function ListProduct() {
+  useMetaTags({
+    title: "Sản phẩm",
+  });
   const slideRef = useRef();
   const [productList, setProductList] = useState([]);
   const params = useParams();
@@ -251,7 +256,6 @@ function ListProduct() {
     setCurrentPic(value.AnhMoTa[0]);
     setOpen(true);
   };
-  const onOpenModal = () => setOpen(true);
   const onCloseModal = () => setOpen(false);
 
   const [amount, setAmount] = useState(1);
@@ -400,15 +404,26 @@ function ListProduct() {
                       <div className="thumb-description clearfix">
                         <div className="caption">
                           <div className="desc-inner">
-                            <h4 className="product-title h-14">
+                            <h4 className="product-title">
                               <Link to={`/products/${product.slug}`}>
                                 {product.TenSanPham}
                               </Link>
                             </h4>
                           </div>
                           <p className="price">
-                            <span className="price-new">
-                              {formatCurrency(product.DonGia)}
+                            <span className="price-new ml-0">
+                              {product.GiamGia > 0 ? (
+                                <div>
+                                  {formatCurrency(
+                                    product.DonGia * (1 - product.GiamGia / 100)
+                                  )}
+                                  <span className="line-through ml-1 text-red-500">
+                                    {formatCurrency(product.DonGia)}
+                                  </span>
+                                </div>
+                              ) : (
+                                formatCurrency(product.DonGia)
+                              )}
                             </span>
                           </p>
                         </div>
@@ -538,7 +553,6 @@ function ListProduct() {
                             <li>
                               <span class="disc">Số lượng còn:</span>
                               <span class="disc1">
-                                {" "}
                                 {currentProduct?.SoLuong > 0
                                   ? `In stock (${currentProduct?.SoLuong})`
                                   : "Out stock"}
@@ -549,7 +563,19 @@ function ListProduct() {
                           <ul class="list-unstyled">
                             <li>
                               <span class="pro_price">
-                                {formatCurrency(currentProduct?.DonGia)}
+                                {currentProduct?.GiamGia > 0 ? (
+                                  <div>
+                                    {formatCurrency(
+                                      currentProduct?.DonGia *
+                                        (1 - currentProduct?.GiamGia / 100)
+                                    )}
+                                    <span className="line-through ml-1 text-red-500">
+                                      {formatCurrency(currentProduct?.DonGia)}
+                                    </span>
+                                  </div>
+                                ) : (
+                                  formatCurrency(currentProduct?.DonGia)
+                                )}
                               </span>
                             </li>
                           </ul>
@@ -561,9 +587,7 @@ function ListProduct() {
                               <label
                                 class="control-label qty"
                                 for="input-quantity"
-                              >
-                                
-                              </label>
+                              ></label>
                               <div class="product-btn-quantity">
                                 <div class="pro-quantity">
                                   <div class="minus-plus">

@@ -9,7 +9,7 @@ import Pagination from "react-js-pagination";
 import { useHistory, useParams } from "react-router";
 import { useLocation } from "react-router-dom";
 import { addToCard } from "features/Cart/cartSlice";
-import {useDispatch} from "react-redux"
+import { useDispatch } from "react-redux";
 import { Modal } from "react-responsive-modal";
 import "react-responsive-modal/styles.css";
 import Slider from "react-slick";
@@ -38,7 +38,6 @@ function ImageInSlider({ picture, handleChangeImage }) {
   );
 }
 //===================
-
 
 function ListCategoryProduct() {
   const slideRef = useRef();
@@ -188,7 +187,21 @@ function ListCategoryProduct() {
   useEffect(() => {
     const fetchProductList = async () => {
       try {
-        const response = await getAllProduct({ ...filter });
+        let response
+        if (filter.DanhMucSP == "sale") {
+           response = await getAllProduct({
+            pageNo: 1,
+            pageSize: 6,
+            filter: {
+              GiamGia: {
+                $gt: 0,
+              },
+            },
+          });
+        }
+        else {
+           response = await getAllProduct({...filter})
+        }
         setProductList(response.result.data);
         setTotal(response.result.totalPage);
         setTotalCount(response.result.totalCount);
@@ -239,11 +252,10 @@ function ListCategoryProduct() {
   //=========add to cart
   const dispatch = useDispatch();
   const handleAddToCart = (product) => {
-    if(product.SoLuong>0){
+    if (product.SoLuong > 0) {
       dispatch(addToCard({ ...product, quantity: amount }));
       history.push("/cart");
     }
-    
   };
   //=============code cho modal
   const handleModal = (value) => {
@@ -252,7 +264,6 @@ function ListCategoryProduct() {
     setCurrentPic(value.AnhMoTa[0]);
     setOpen(true);
   };
-  const onOpenModal = () => setOpen(true);
   const onCloseModal = () => setOpen(false);
 
   const [amount, setAmount] = useState(1);
@@ -274,12 +285,11 @@ function ListCategoryProduct() {
 
   useEffect(() => {
     const fetchSetting = async () => {
-      const data = await getSettingById('setting-banner-product');
-      if(data && data.data && data.data.value)
-        setSettings(data.data.value);
+      const data = await getSettingById("setting-banner-product");
+      if (data && data.data && data.data.value) setSettings(data.data.value);
     };
     fetchSetting();
-  },[]);
+  }, []);
 
   return (
     <div className="list-foods-main">
@@ -330,8 +340,12 @@ function ListCategoryProduct() {
                           onChange={handleSelect}
                         >
                           <option value="_id">Mặc định</option>
-                          <option value="TenSanPham">Tên sản phẩm (A - Z)</option>
-                          <option value="-TenSanPham">Tên sản phẩm (Z - A)</option>
+                          <option value="TenSanPham">
+                            Tên sản phẩm (A - Z)
+                          </option>
+                          <option value="-TenSanPham">
+                            Tên sản phẩm (Z - A)
+                          </option>
                           <option value="DonGia">Gía (Thấp &gt; Cao)</option>
                           <option value="-DonGia">Gía (Cao &gt; Thấp)</option>
                         </select>
@@ -343,7 +357,7 @@ function ListCategoryProduct() {
             </div>
 
             {/* list sản phẩm */}
-            <div className="row category-row">
+            <div className="row category-row" style={{ padding: '0px 15px 15px 15px' }}>
               {productList.map(function (product) {
                 return (
                   <div
@@ -389,7 +403,11 @@ function ListCategoryProduct() {
                             <i className="fa fa-eye" aria-hidden="true"></i>
                           </button>
                         </div>
-                        {product.SoLuong<1&&(<div className="absolute top-6 left-1 "><span className="text-red-500">Out stock</span></div>)}
+                        {product.SoLuong < 1 && (
+                          <div className="absolute top-6 left-1 ">
+                            <span className="text-red-500">Out stock</span>
+                          </div>
+                        )}
                       </div>
                       <div className="thumb-description clearfix">
                         <div className="caption">
@@ -401,8 +419,19 @@ function ListCategoryProduct() {
                             </h4>
                           </div>
                           <p className="price">
-                            <span className="price-new">
-                              {formatCurrency(product?.DonGia)}
+                            <span className="price-new ml-0">
+                            {product.GiamGia > 0 ? (
+                                <div>
+                                  {formatCurrency(
+                                    product.DonGia * (1 - product.GiamGia / 100)
+                                  )}
+                                  <span className="line-through ml-1 text-red-500">
+                                    {formatCurrency(product.DonGia)}
+                                  </span>
+                                </div>
+                              ) : (
+                                formatCurrency(product.DonGia)
+                              )}
                             </span>
                           </p>
                         </div>
@@ -411,6 +440,7 @@ function ListCategoryProduct() {
                   </div>
                 );
               })}
+              {productList.length == 0 && <div className="p-4 bg-white w-full text-center">Không có sản phẩm trong danh mục này</div>}
             </div>
             <Modal open={open} onClose={onCloseModal} center>
               <div
@@ -448,7 +478,7 @@ function ListCategoryProduct() {
                                   style={{ transition: "all 0.25s ease 0s" }}
                                 >
                                   {pictures.length > 3 ? (
-                                    <Slider ref={slideRef} >
+                                    <Slider ref={slideRef}>
                                       {pictures.map((picture, index) => {
                                         return (
                                           <ImageInSlider
@@ -538,8 +568,19 @@ function ListCategoryProduct() {
                           <ul class="list-unstyled">
                             <li>
                               <span class="pro_price">
-                                {formatCurrency(currentProduct?.DonGia)}
-                              </span>
+                              {currentProduct?.GiamGia > 0 ? (
+                                  <div>
+                                    {formatCurrency(
+                                      currentProduct?.DonGia *
+                                        (1 - currentProduct?.GiamGia / 100)
+                                    )}
+                                    <span className="line-through ml-1 text-red-500">
+                                      {formatCurrency(currentProduct?.DonGia)}
+                                    </span>
+                                  </div>
+                                ) : (
+                                  formatCurrency(currentProduct?.DonGia)
+                                )}                              </span>
                             </li>
                           </ul>
 
@@ -550,9 +591,7 @@ function ListCategoryProduct() {
                               <label
                                 class="control-label qty"
                                 for="input-quantity"
-                              >
-                                
-                              </label>
+                              ></label>
                               <div class="product-btn-quantity">
                                 <div class="pro-quantity">
                                   <div class="minus-plus">

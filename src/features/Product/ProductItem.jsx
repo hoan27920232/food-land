@@ -36,7 +36,9 @@ function ProductItem({ product }) {
           <div className="hover:text-yellow-400 text-xl text-center capitalize-first">
             {product.title}
           </div>
-          <div className=" text-center">{formatCurrency(product.price)}</div>
+          <div className=" text-center">{product.GiamGia > 0 ? (<div>
+                      {formatCurrency(product.DonGia * (1 - product.GiamGia/100))}<span className="line-through ml-1 text-red-500">{formatCurrency(product.DonGia)}</span>
+                    </div>) : formatCurrency(product.DonGia)}</div>
         </div>
       </div>
     </div>

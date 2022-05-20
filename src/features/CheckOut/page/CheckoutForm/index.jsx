@@ -15,10 +15,14 @@ import { me } from "api/userApi";
 import { checkDiscount, createOrder } from "api/orderApi";
 import axios from "axios";
 import InputArea from "components/InputArea";
-
+import wait from "wait";
+import useMetaTags from 'react-metatags-hook'
 CheckoutForm.propTypes = {};
 
 function CheckoutForm(props) {
+  useMetaTags({
+    title: "Checkout",
+  });
   const [initialValues, setInitialValues] = useState({
     email: "",
     address: "",
@@ -37,10 +41,11 @@ function CheckoutForm(props) {
   const [wards, setWards] = useState([]);
   const ref = useRef(null);
   const [load, setLoad] = useState(false);
-  const [idDiscount, setIdDiscount] = useState('');
-  const [text, setText] = useState('');
+  const [idDiscount, setIdDiscount] = useState("");
+  const [text, setText] = useState("");
   const [code, setCode] = useState("");
   const [display, setDisplay] = useState(false);
+  const [shipMoney, setShipMoney] = useState(0);
   useEffect(() => {
     if (localStorage.getItem("cartItems")) {
       setCartProduct(JSON.parse(localStorage.getItem("cartItems")));
@@ -48,58 +53,82 @@ function CheckoutForm(props) {
   }, []);
   useEffect(() => {
     async function fectchAPI() {
-      const actionMe = await me().then((data) => {
+      const actionMe = await me().then(async (data) => {
         setInitialValues({
-          address: data && data.DiaChi && data.DiaChi,
           email: data && data.email && data.email,
           sdt: data && data.SDT && data.SDT,
-          shippingAddress: {
+          DiaChi: {
             provinceOrCity:
               data &&
-              data?.shippingAddress &&
-              data?.shippingAddress?.provinceOrCity &&
-              data?.shippingAddress?.provinceOrCity?.id &&
-              data?.shippingAddress?.provinceOrCity?.id,
+              data?.DiaChi &&
+              data?.DiaChi?.provinceOrCity &&
+              data?.DiaChi?.provinceOrCity?.id &&
+              data?.DiaChi?.provinceOrCity?.id,
             district:
               data &&
-              data?.shippingAddress &&
-              data?.shippingAddress?.district &&
-              data?.shippingAddress?.district?.id &&
-              data?.shippingAddress?.district?.id,
+              data?.DiaChi &&
+              data?.DiaChi?.district &&
+              data?.DiaChi?.district?.id &&
+              data?.DiaChi?.district?.id,
             ward:
               data &&
-              data?.shippingAddress &&
-              data?.shippingAddress?.ward &&
-              data?.shippingAddress?.ward?.id &&
-              data?.shippingAddress?.ward?.id,
+              data?.DiaChi &&
+              data?.DiaChi?.ward &&
+              data?.DiaChi?.ward?.id &&
+              data?.DiaChi?.ward?.id,
+            DiaChiDetail: data && data.DiaChi && data.DiaChi?.DiaChiDetail,
           },
-          note:  '',
-          MaDiscount: ''
+          note: "",
+          MaDiscount: "",
         });
+        setLoad(true);
+        await wait(2000);
+
+        let weight = 0;
+        for (let i = 0; i < cartProduct.length; i++) {
+          weight += cartProduct[i].KhoiLuong * cartProduct[i].cartQuantity;
+        }
+        const res = await axios.get(
+          `${process.env.REACT_APP_API_URL}ghtk/calculateShip`,
+          {
+            params: {
+              province: data?.DiaChi?.provinceOrCity?.name,
+              district: data?.DiaChi?.district?.name,
+              weight: weight,
+            },
+          }
+        );
+        if (cartProduct && cartProduct.length) {
+          setShipMoney(res.data?.ship?.fee?.fee || 0);
+        }
+        setLoad(false);
       });
     }
     fectchAPI();
     const total = cartProduct
-      .map((p) => p.DonGia * p.cartQuantity)
+      .map((p) => {
+        if (p.GiamGia > 0) {
+          return p.DonGia * (1 - p.GiamGia / 100) * p.cartQuantity;
+        } else return p.DonGia * p.cartQuantity;
+      })
       .reduce((a, b) => {
         return a + b;
       }, 0);
     setTotal(total);
   }, [cartProduct]);
   const validateSchema = Yup.object().shape({
-    address: Yup.string().required(),
-
     email: Yup.string().required().email(),
     sdt: Yup.string()
       .required()
       .matches(/((09|03|07|08|05)+([0-9]{8})\b)/g),
-    shippingAddress: Yup.object().shape({
+    DiaChi: Yup.object().shape({
       provinceOrCity: Yup.string().required(),
       district: Yup.string().required(),
       ward: Yup.string().required(),
+      DiaChiDetail: Yup.string().required(),
     }),
     note: Yup.string(),
-    discount: Yup.string()
+    discount: Yup.string(),
   });
   const handlePayment = (value) => {
     setPayment(value);
@@ -110,11 +139,11 @@ function CheckoutForm(props) {
     );
     setCities(res.data);
     const res2 = await axios.get(
-      `${process.env.REACT_APP_API_URL}ghtk/vnlocations/${ref?.current?.values?.shippingAddress?.provinceOrCity}`
+      `${process.env.REACT_APP_API_URL}ghtk/vnlocations/${ref?.current?.values?.DiaChi?.provinceOrCity}`
     );
     setDistricts(res2.data);
     const res3 = await axios.get(
-      `${process.env.REACT_APP_API_URL}ghtk/vnlocations/${ref?.current?.values?.shippingAddress?.district}`
+      `${process.env.REACT_APP_API_URL}ghtk/vnlocations/${ref?.current?.values?.DiaChi?.district}`
     );
     setWards(res3.data);
   };
@@ -122,49 +151,44 @@ function CheckoutForm(props) {
     setCode(e.target.value);
   };
   const checkDiscountFunction = async () => {
-    const now = new Date()
+    const now = new Date();
     let check;
     if (code) {
-      try{
+      try {
         check = await checkDiscount(code);
-      }catch(err){
-
-      }
+      } catch (err) {}
     }
-    if(check && check.data) {
-      if(Date.parse(check.data.startDate) > Date.parse(now))
-      {
-        setText("Chưa đến thời điểm code được sử dụng")
+    if (check && check.data) {
+      if (Date.parse(check.data.startDate) > Date.parse(now)) {
+        setText("Chưa đến thời điểm code được sử dụng");
+      } else if (Date.parse(check.data.endDate) < Date.parse(now)) {
+        setText("Hết thời điểm code được sử dụng");
+      } else if (!check.data.active) {
+        setText("Code đã bị vô hiệu hóa");
+      } else if (check.data.discount == 0) {
+        setText("Code không có tỉ lệ giảm giá");
+      } else {
+        setText(
+          "Áp dụng code thành công bạn được giảm giá " +
+            check.data.discount +
+            " phần trăm"
+        );
+        setTotal((total * (100 - check.data.discount)) / 100);
+        setIdDiscount(check.data._id);
       }
-      else if(Date.parse(check.data.endDate) < Date.parse(now)) {
-        setText("Hết thời điểm code được sử dụng")
-      }
-      else if(!check.data.active) {
-        setText("Code đã bị vô hiệu hóa")
-      }
-      else if(check.data.discount == 0) {
-        setText("Code không có tỉ lệ giảm giá")
-      }
-      else{
-        setText("Áp dụng code thành công bạn được giảm giá " + check.data.discount + " phần trăm")
-        setTotal(total * (100 - check.data.discount) / 100)
-        setIdDiscount(check.data._id)
-      }
-    }else {
-      setText("Code bạn nhập không đúng")
+    } else {
+      setText("Code bạn nhập không đúng");
     }
     setDisplay(true);
   };
   const onSubmit = async (values) => {
     const city = formatAddress(
-      cities.find((p) => p.id == values.shippingAddress.provinceOrCity)
+      cities.find((p) => p.id == values.DiaChi.provinceOrCity)
     );
     const district = formatAddress(
-      districts.find((p) => p.id == values.shippingAddress.district)
+      districts.find((p) => p.id == values.DiaChi.district)
     );
-    const ward = formatAddress(
-      wards.find((p) => p.id == values.shippingAddress.ward)
-    );
+    const ward = formatAddress(wards.find((p) => p.id == values.DiaChi.ward));
     setLoad(true);
     let payUrl = "";
     const items = cartProduct.map((p) => ({
@@ -173,42 +197,40 @@ function CheckoutForm(props) {
       },
       soluong: p.cartQuantity,
     }));
-    let weight = 0
-    for (let i = 0; i < cartProduct.length; i++) {
-      weight +=
-      cartProduct[i].KhoiLuong * cartProduct[i].cartQuantity
-    }
-    console.log(weight)
-    const res = await axios.get(
-      `${process.env.REACT_APP_API_URL}ghtk/calculateShip`,
-      {
-        params: {
-          province: city.name,
-          district: district.name,
-          weight: weight,
-        },
-      }
-    );
+    // let weight = 0
+    // for (let i = 0; i < cartProduct.length; i++) {
+    //   weight +=
+    //   cartProduct[i].KhoiLuong * cartProduct[i].cartQuantity
+    // }
+    // const res = await axios.get(
+    //   `${process.env.REACT_APP_API_URL}ghtk/calculateShip`,
+    //   {
+    //     params: {
+    //       province: city.name,
+    //       district: district.name,
+    //       weight: weight,
+    //     },
+    //   }
+    // );
     const finalData = {
       items: items,
       email: values.email,
       SDT: values.sdt,
-      DiaChi: values.address,
       MaKhachHang: user._id,
       TrangThai: 0,
       KieuThanhToan: payment,
       TinhTrangThanhToan: 0,
-      shippingAddress: {
+      DiaChi: {
         provinceOrCity: city,
         district: district,
-        ward: ward
+        ward: ward,
+        DiaChiDetail: values.DiaChi.DiaChiDetail,
       },
       note: values.note,
-      shipMoney: res.data?.ship?.fee?.fee || 0,
+      shipMoney: shipMoney || 0,
       MaDiscount: idDiscount,
-
     };
-    console.log(finalData)
+    console.log(finalData);
     const action = await createOrder(finalData)
       .then((res) => {
         payUrl = res.data.payUrl;
@@ -247,8 +269,34 @@ function CheckoutForm(props) {
     }
   };
   const onChangeWard = async (e) => {
-    
-  }
+    const city = formatAddress(
+      cities.find((p) => p.id == ref?.current?.values?.DiaChi.provinceOrCity)
+    );
+    const district = formatAddress(
+      districts.find((p) => p.id == ref?.current?.values?.DiaChi.district)
+    );
+    const ward = formatAddress(
+      wards.find((p) => p.id == ref?.current?.values?.DiaChi.ward)
+    );
+    // ref?.current?.values?.DiaChi
+    let weight = 0;
+    for (let i = 0; i < cartProduct.length; i++) {
+      weight += cartProduct[i].KhoiLuong * cartProduct[i].cartQuantity;
+    }
+    setLoad(true);
+    const res = await axios.get(
+      `${process.env.REACT_APP_API_URL}ghtk/calculateShip`,
+      {
+        params: {
+          province: city?.name,
+          district: district?.name,
+          weight: weight,
+        },
+      }
+    );
+    setLoad(false);
+    setShipMoney(res.data?.ship?.fee?.fee || 0);
+  };
   const formatAddress = (data) => {
     return {
       id: data?.id ? data.id : null,
@@ -299,7 +347,7 @@ function CheckoutForm(props) {
                 return (
                   <Form className="flex justify-center flex-col items-start space-y-1">
                     <FastField
-                      name="address"
+                      name="DiaChi.DiaChiDetail"
                       component={InputField}
                       label="Địa chỉ(*)"
                       placeholder="Địa chỉ"
@@ -311,13 +359,13 @@ function CheckoutForm(props) {
                         </label>
                         <Field
                           id="city"
-                          name="shippingAddress.provinceOrCity"
+                          name="DiaChi.provinceOrCity"
                           as="select"
                           onChange={(e) => {
                             handleChange(e);
                             onChangeCity(e);
-                            setFieldValue("shippingAddress.ward", "");
-                            setFieldValue("shippingAddress.district", "");
+                            setFieldValue("DiaChi.ward", "");
+                            setFieldValue("DiaChi.district", "");
                           }}
                           className="h-10 w-48"
                           style={{
@@ -329,14 +377,14 @@ function CheckoutForm(props) {
                           <option value="">Chọn thành phố</option>
                           {cities.map((city) => (
                             <option key={city.id} value={city.id}>
-                              {city.id} {city.name}
+                              {city.name}
                             </option>
                           ))}
                         </Field>
-                        {errors?.shippingAddress &&
-                          touched?.shippingAddress &&
-                          touched?.shippingAddress?.provinceOrCity &&
-                          errors?.shippingAddress?.provinceOrCity && (
+                        {errors?.DiaChi &&
+                          touched?.DiaChi &&
+                          touched?.DiaChi?.provinceOrCity &&
+                          errors?.DiaChi?.provinceOrCity && (
                             <p className="text-red-700 text-center">
                               Chưa có thành phố
                             </p>
@@ -348,12 +396,12 @@ function CheckoutForm(props) {
                         </label>
                         <Field
                           id="district"
-                          name="shippingAddress.district"
+                          name="DiaChi.district"
                           as="select"
                           onChange={(e) => {
                             handleChange(e);
                             onChangeDistrict(e);
-                            setFieldValue("shippingAddress.ward", "");
+                            setFieldValue("DiaChi.ward", "");
                           }}
                           className="h-10 w-48"
                           style={{
@@ -366,14 +414,14 @@ function CheckoutForm(props) {
 
                           {districts.map((district) => (
                             <option key={district.id} value={district.id}>
-                              {district.id} {district.name}
+                              {district.name}
                             </option>
                           ))}
                         </Field>
-                        {errors?.shippingAddress &&
-                          touched?.shippingAddress &&
-                          touched?.shippingAddress?.district &&
-                          errors?.shippingAddress?.district && (
+                        {errors?.DiaChi &&
+                          touched?.DiaChi &&
+                          touched?.DiaChi?.district &&
+                          errors?.DiaChi?.district && (
                             <p className="text-red-700 text-center">
                               Chưa có Quận/huyện
                             </p>
@@ -385,10 +433,11 @@ function CheckoutForm(props) {
                         </label>
                         <Field
                           id="ward"
-                          name="shippingAddress.ward"
+                          name="DiaChi.ward"
                           as="select"
                           onChange={(e) => {
                             handleChange(e);
+                            onChangeWard(e);
                           }}
                           className="h-10 w-48"
                           style={{
@@ -401,14 +450,14 @@ function CheckoutForm(props) {
 
                           {wards.map((ward) => (
                             <option key={ward.id} value={ward.id}>
-                              {ward.id} {ward.name}
+                              {ward.name}
                             </option>
                           ))}
                         </Field>
-                        {errors?.shippingAddress &&
-                          touched?.shippingAddress &&
-                          touched?.shippingAddress?.ward &&
-                          errors?.shippingAddress?.ward && (
+                        {errors?.DiaChi &&
+                          touched?.DiaChi &&
+                          touched?.DiaChi?.ward &&
+                          errors?.DiaChi?.ward && (
                             <p className="text-red-700 text-center">
                               Chưa có xã
                             </p>
@@ -427,7 +476,7 @@ function CheckoutForm(props) {
                       label="Phone(*)"
                       placeholder="Phone"
                     />
-                     <FastField
+                    <FastField
                       name="note"
                       component={InputArea}
                       label="Note"
@@ -483,7 +532,7 @@ function CheckoutForm(props) {
                                       Số lượng
                                     </th>
                                     <th className="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
-                                     Tổng tiền
+                                      Tổng tiền
                                     </th>
                                   </tr>
                                 </thead>
@@ -503,14 +552,34 @@ function CheckoutForm(props) {
                                           {item.TenSanPham}
                                         </td>
                                         <td className="border-t-0 px-6 align-center border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                                          {formatCurrency(item.DonGia)}
+                                          {item.GiamGia > 0 ? (
+                                            <div>
+                                              {formatCurrency(
+                                                item.DonGia *
+                                                  (1 - item.GiamGia / 100)
+                                              )}
+                                              <span className="line-through ml-1 text-red-500">
+                                                {formatCurrency(item.DonGia)}
+                                              </span>
+                                            </div>
+                                          ) : (
+                                            formatCurrency(item.DonGia)
+                                          )}
                                         </td>
                                         <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
                                           {item.cartQuantity}
                                         </td>
                                         <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                                          {formatCurrency(
-                                            item.cartQuantity * item.DonGia
+                                        {item.GiamGia > 0 ? (
+                                            <div>
+                                              {formatCurrency(
+                                                item.DonGia *
+                                                  (1 - item.GiamGia / 100)
+                                              )}
+                                            
+                                            </div>
+                                          ) : (
+                                            formatCurrency(item.DonGia)
                                           )}
                                         </td>
                                       </tr>
@@ -519,7 +588,8 @@ function CheckoutForm(props) {
                               </table>
                             </div>
                             <div className="text-right uppercase font-bold mr-14 mb-4">
-                              Tổng tiền: {formatCurrency(total)}
+                              Tổng tiền: {formatCurrency(total)} + Ship:{" "}
+                              {formatCurrency(shipMoney)}
                             </div>
                           </div>
                         </div>

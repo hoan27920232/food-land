@@ -190,7 +190,9 @@ function NewProduct(props) {
                     </Link>
                   </div>
                   <div className=" text-center">
-                    {formatCurrency(product.DonGia)}
+                  {product.GiamGia > 0 ? (<div>
+                      {formatCurrency(product.DonGia * (1 - product.GiamGia/100))}<span className="line-through ml-1 text-red-500">{formatCurrency(product.DonGia)}</span>
+                    </div>) : formatCurrency(product.DonGia)}
                   </div>
                 </div>
               </div>
@@ -327,8 +329,19 @@ function NewProduct(props) {
                       <ul class="list-unstyled">
                         <li>
                           <span class="pro_price">
-                            {formatCurrency(currentProduct?.DonGia)}
-                          </span>
+                          {currentProduct?.GiamGia > 0 ? (
+                              <div>
+                                {formatCurrency(
+                                  currentProduct?.DonGia *
+                                    (1 - currentProduct?.GiamGia / 100)
+                                )}
+                                <span className="line-through ml-1 text-red-500">
+                                  {formatCurrency(currentProduct?.DonGia)}
+                                </span>
+                              </div>
+                            ) : (
+                              formatCurrency(currentProduct?.DonGia)
+                            )}                          </span>
                         </li>
                       </ul>
 

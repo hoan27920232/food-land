@@ -38,6 +38,7 @@
     "react-transition-group": "^4.4.2",
     "slick-carousel": "^1.8.1",
     "styled-components": "^5.3.3",
+    "wait": "^0.4.2",
     "web-vitals": "^1.0.1",
     "yup": "^0.32.11"
   },

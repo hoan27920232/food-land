@@ -24,7 +24,7 @@ function ResetPassForm(props) {
   const location = useLocation();
   const validateSchema = Yup.object().shape({
     newPassword: Yup.string().required("This field is required").min(6),
-
+    
   });
 
   const history = useHistory();

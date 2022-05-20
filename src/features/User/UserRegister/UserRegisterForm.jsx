@@ -19,16 +19,17 @@ UserRegisterForm.defaultProps = {
   onSubmit: null,
   initialValues: {
     TenKhachHang: "",
-    DiaChi: "",
     email: "",
     SDT: "",
     password: "",
     repassword: "",
     NgaySinh: "",
-    shippingAddress: {
+    DiaChi: {
       provinceOrCity: null,
       district: null,
       ward: null,
+      DiaChiDetail: "",
+
     },
   },
 };
@@ -41,7 +42,6 @@ function UserRegisterForm(props) {
   const refForm = useRef(null);
   const validationSchema = Yup.object().shape({
     TenKhachHang: Yup.string().required("This field is required"),
-    DiaChi: Yup.string().required("This field is required"),
     email: Yup.string()
       .email()
       .required("This field is required")
@@ -53,11 +53,12 @@ function UserRegisterForm(props) {
     repassword: Yup.string()
       .required("This field is required")
       .oneOf([Yup.ref("password"), null], "Passwords must match"),
-    NgaySinh: Yup.date().required("This field is required"),
-    shippingAddress: Yup.object().shape({
+    NgaySinh: Yup.date(),
+    DiaChi: Yup.object().shape({
       provinceOrCity: Yup.string().required(),
       district: Yup.string().required(),
       ward: Yup.string().required(),
+      DiaChiDetail: Yup.string().required("This field is required"),
     }),
   });
   const getCities = async () => {
@@ -106,17 +107,18 @@ function UserRegisterForm(props) {
       onSubmit={(values) =>
         onSubmit({
           ...values,
-          shippingAddress: {
-            ...values.shippingAddress,
+          DiaChi: {
+            ...values.DiaChi,
             provinceOrCity: formatAddress(
-              cities.find((p) => p.id == values.shippingAddress.provinceOrCity)
+              cities.find((p) => p.id == values.DiaChi.provinceOrCity)
             ),
             district: formatAddress(
-              districts.find((p) => p.id == values.shippingAddress.district)
+              districts.find((p) => p.id == values.DiaChi.district)
             ),
             ward: formatAddress(
-              wards.find((p) => p.id == values.shippingAddress.ward)
+              wards.find((p) => p.id == values.DiaChi.ward)
             ),
+            DiaChiDetail: values.DiaChi?.DiaChiDetail
           },
         })
       }
@@ -172,7 +174,7 @@ function UserRegisterForm(props) {
                             <FastField
                               component={InputField}
                               type="text"
-                              name="DiaChi"
+                              name="DiaChi.DiaChiDetail"
                               placeholder="Address"
                               id="input-address"
                               label="Địa chỉ"
@@ -181,7 +183,7 @@ function UserRegisterForm(props) {
                           {/* <div className="form-group pl-12">
                             <FastField
                               component={SelectField}
-                              name="shippingAddress.provinceOrCity"
+                              name="DiaChi.provinceOrCity"
                               placeholder="City"
                               id="input-city"
                               label="City"
@@ -196,13 +198,13 @@ function UserRegisterForm(props) {
                               </label>
                               <Field
                                 id="city"
-                                name="shippingAddress.provinceOrCity"
+                                name="DiaChi.provinceOrCity"
                                 as="select"
                                 onChange={(e) => {
                                   handleChange(e);
                                   onChangeCity(e);
-                                  setFieldValue("shippingAddress.ward", "");
-                                  setFieldValue("shippingAddress.district", "");
+                                  setFieldValue("DiaChi.ward", "");
+                                  setFieldValue("DiaChi.district", "");
                                 }}
                                 className="h-10"
                                 style={{
@@ -215,14 +217,14 @@ function UserRegisterForm(props) {
 
                                 {cities.map((city) => (
                                   <option key={city.id} value={city.id}>
-                                    {city.id} {city.name}
+                                    {city.name}
                                   </option>
                                 ))}
                               </Field>
-                              {errors?.shippingAddress &&
-                                touched?.shippingAddress &&
-                                touched?.shippingAddress?.provinceOrCity &&
-                                errors?.shippingAddress?.provinceOrCity && (
+                              {errors?.DiaChi &&
+                                touched?.DiaChi &&
+                                touched?.DiaChi?.provinceOrCity &&
+                                errors?.DiaChi?.provinceOrCity && (
                                   <p className="text-red-700 text-center">
                                     Chưa có thành phố
                                   </p>
@@ -234,12 +236,12 @@ function UserRegisterForm(props) {
                               </label>
                               <Field
                                 id="district"
-                                name="shippingAddress.district"
+                                name="DiaChi.district"
                                 as="select"
                                 onChange={(e) => {
                                   handleChange(e);
                                   onChangeDistrict(e);
-                                  setFieldValue("shippingAddress.ward", "");
+                                  setFieldValue("DiaChi.ward", "");
                                 }}
                                 className="h-10"
                                 style={{
@@ -252,14 +254,14 @@ function UserRegisterForm(props) {
 
                                 {districts.map((district) => (
                                   <option key={district.id} value={district.id}>
-                                    {district.id} {district.name}
+                                   {district.name}
                                   </option>
                                 ))}
                               </Field>
-                              {errors?.shippingAddress &&
-                                touched?.shippingAddress &&
-                                touched?.shippingAddress?.district &&
-                                errors?.shippingAddress?.district && (
+                              {errors?.DiaChi &&
+                                touched?.DiaChi &&
+                                touched?.DiaChi?.district &&
+                                errors?.DiaChi?.district && (
                                   <p className="text-red-700 text-center">
                                     Chưa có Quận/huyện
                                   </p>
@@ -271,7 +273,7 @@ function UserRegisterForm(props) {
                               </label>
                               <Field
                                 id="ward"
-                                name="shippingAddress.ward"
+                                name="DiaChi.ward"
                                 as="select"
                                 onChange={(e) => {
                                   handleChange(e);
@@ -287,14 +289,14 @@ function UserRegisterForm(props) {
 
                                 {wards.map((ward) => (
                                   <option key={ward.id} value={ward.id}>
-                                    {ward.id} {ward.name}
+                                    {ward.name}
                                   </option>
                                 ))}
                               </Field>
-                              {errors?.shippingAddress &&
-                                touched?.shippingAddress &&
-                                touched?.shippingAddress?.ward &&
-                                errors?.shippingAddress?.ward && (
+                              {errors?.DiaChi &&
+                                touched?.DiaChi &&
+                                touched?.DiaChi?.ward &&
+                                errors?.DiaChi?.ward && (
                                   <p className="text-red-700 text-center">
                                     Chưa có xã
                                   </p>

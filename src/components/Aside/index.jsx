@@ -64,10 +64,10 @@ function Aside(props) {
     }
   };
   useEffect(() => {
-    console.log("RUn to")
+    console.log("RUn to");
     const decodeUrl = qs.parse(location.search.substring(1));
     const filter = decodeUrl["filter"];
-    console.log(filter)
+    console.log(filter);
     if (filter) {
       if (filter["DonGia"]) {
         if (filter["DonGia"]["$gte"] == 0 && filter["DonGia"]["$lte"] == 100000)
@@ -86,7 +86,7 @@ function Aside(props) {
       }
       if (filter["$or"]) {
         if (Number.parseInt(filter["$or"][0]["DonGia"]["$gte"]) != 0) {
-          console.log("Hello")
+          console.log("Hello");
           setCheck3(true);
           setCheck2(true);
         } else {
@@ -135,6 +135,14 @@ function Aside(props) {
         <div className="box-category">
           <h3 className="toggled relative">Danh mục</h3>
           <ul className="list-unstyled parent" id="selectMe-desk">
+          <li className="" >
+                  <span
+                    className="list-group-item cursor-pointer"
+                    onClick={() => handleChangeCategory("sale")}
+                  >
+                    <span>Sản phẩm giảm giá</span>
+                  </span>
+                </li>
             {categoryList.map((category) => {
               return (
                 <li className="" key={category._id}>
@@ -242,7 +250,7 @@ function Aside(props) {
                             alt={product.TenSanPham}
                             title={product.TenSanPham}
                             className="img-responsive"
-                            style={{maxHeight: "78px"}}
+                            style={{ maxHeight: "78px" }}
                           />
                         </a>
                       </Link>
@@ -259,9 +267,18 @@ function Aside(props) {
                           </h4>
                         </div>
                         <p className="price">
-                          <span className="price-new">
-                            {formatCurrency(product.DonGia)}
-                          </span>
+                          {product.GiamGia > 0 ? (
+                            <div>
+                              {formatCurrency(
+                                product.DonGia * (1 - product.GiamGia / 100)
+                              )}
+                              <span className="line-through ml-1 text-red-500">
+                                {formatCurrency(product.DonGia)}
+                              </span>
+                            </div>
+                          ) : (
+                            formatCurrency(product.DonGia)
+                          )}
                         </p>
                       </div>
                     </div>

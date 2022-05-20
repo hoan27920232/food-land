@@ -66,30 +66,31 @@ function UserInfo() {
         console.log(data, "data");
         setInitialValues({
           TenKhachHang: data && data.TenKhachHang ? data.TenKhachHang : "",
-          DiaChi: data && data.DiaChi && data.DiaChi,
           email: data && data.email && data.email,
           SDT: data && data.SDT && data.SDT,
           NgaySinh:
             data && data.NgaySinh && moment(data.NgaySinh).format("YYYY-MM-DD"),
-          shippingAddress: {
+          DiaChi: {
             provinceOrCity:
               data &&
-              data?.shippingAddress &&
-              data?.shippingAddress?.provinceOrCity &&
-              data?.shippingAddress?.provinceOrCity?.id &&
-              data?.shippingAddress?.provinceOrCity?.id,
+              data?.DiaChi &&
+              data?.DiaChi?.provinceOrCity &&
+              data?.DiaChi?.provinceOrCity?.id &&
+              data?.DiaChi?.provinceOrCity?.id,
             district:
               data &&
-              data?.shippingAddress &&
-              data?.shippingAddress?.district &&
-              data?.shippingAddress?.district?.id &&
-              data?.shippingAddress?.district?.id,
+              data?.DiaChi &&
+              data?.DiaChi?.district &&
+              data?.DiaChi?.district?.id &&
+              data?.DiaChi?.district?.id,
             ward:
               data &&
-              data?.shippingAddress &&
-              data?.shippingAddress?.ward &&
-              data?.shippingAddress?.ward?.id &&
-              data?.shippingAddress?.ward?.id,
+              data?.DiaChi &&
+              data?.DiaChi?.ward &&
+              data?.DiaChi?.ward?.id &&
+              data?.DiaChi?.ward?.id,
+              DiaChiDetail: data && data.DiaChi && data.DiaChi?.DiaChiDetail,
+
           },
         });
       });

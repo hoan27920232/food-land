@@ -8,8 +8,8 @@ import { getTotals } from "../../features/Cart/cartSlice";
 import "../../assets/styles/HeaderCart.css";
 import { logout } from "features/User/Login/loginSlice";
 import { getAllProduct } from "api/productApi";
-import '../../assets/styles/SearchResult.css'
-import {AllSetting,getSettingById} from 'api/settingApi'
+import "../../assets/styles/SearchResult.css";
+import { AllSetting, getSettingById } from "api/settingApi";
 Header.propTypes = {};
 
 function TopHeader() {
@@ -20,7 +20,7 @@ function TopHeader() {
   function handleClick(currentRoute) {
     history.push("/" + currentRoute);
   }
-  
+
   const openDropDownList = () => {
     var dropdownMenuAccount = document.querySelector(".account-link-toggle");
     if (dropdownMenuAccount.classList.contains("display-block")) {
@@ -63,8 +63,6 @@ function TopHeader() {
     history.push("/");
   };
 
-  
-
   return (
     <div className="top">
       <div className="container">
@@ -85,23 +83,42 @@ function TopHeader() {
                 onClick={() => setsideAccount((sideAccount) => !sideAccount)}
               >
                 <i className="fa fa-user-o hidden-xs"></i>
-                <span style={{ margin: "0 5px" }}>{user && user.TenKhachHang ? user.TenKhachHang : 'My Account'}</span>
+                <span style={{ margin: "0 5px" }}>
+                  {user && user.TenKhachHang ? user.TenKhachHang : "My Account"}
+                </span>
                 <i className="fa fa-angle-down"></i>
               </div>
               <nav
                 className={sideAccount ? "acount-cart active" : "acount-cart"}
               >
                 {token != "" ? (
-                  <ul className="acount-cart-items " onClick={() => setsideAccount((sideAccount) => !sideAccount)}>
+                  <ul
+                    className="acount-cart-items "
+                    onClick={() =>
+                      setsideAccount((sideAccount) => !sideAccount)
+                    }
+                  >
                     <li>
                       <Link to="/account">Thông tin cá nhân</Link>
                     </li>
                     <li>
-                      <a className="cursor-pointer" onClick={()=> {handleLogout()}}>Logout</a>
+                      <a
+                        className="cursor-pointer"
+                        onClick={() => {
+                          handleLogout();
+                        }}
+                      >
+                        Logout
+                      </a>
                     </li>
                   </ul>
                 ) : (
-                  <ul className="acount-cart-items " onClick={() => setsideAccount((sideAccount) => !sideAccount)}>
+                  <ul
+                    className="acount-cart-items "
+                    onClick={() =>
+                      setsideAccount((sideAccount) => !sideAccount)
+                    }
+                  >
                     <li>
                       <Link to="/account/register">Register</Link>
                     </li>
@@ -134,45 +151,41 @@ function MiddleHeader() {
   function handleClick(currentRoute) {
     history.push("/" + currentRoute);
   }
-  
-  const cart = useSelector((state)=>state.cart);
-  useEffect(()=>{
-        dispatch(getTotals());
-    },[cart, dispatch]);
 
-
-  
-   const [filteredData, setFilteredData] = useState([]);
+  const cart = useSelector((state) => state.cart);
+  useEffect(() => {
+    dispatch(getTotals());
+  }, [cart, dispatch]);
+  const [filteredData, setFilteredData] = useState([]);
   const [wordEntered, setWordEntered] = useState("");
 
   const handleFilter = (event) => {
     const searchWord = event.target.value;
-    setWordEntered(searchWord)
+    setWordEntered(searchWord);
   };
   const handleSearch = () => {
     history.push({
-      pathname: '/products',
-      search: `?keywords=${wordEntered}&pageNo=1&pageSize=3`
+      pathname: "/products",
+      search: `?keywords=${wordEntered}&pageNo=1&pageSize=3`,
     });
     setWordEntered("");
-  }
+  };
 
   const handleEnter = (e) => {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       history.push({
-        pathname: '/products',
-        search: `?keywords=${wordEntered}&pageNo=1&pageSize=3`
+        pathname: "/products",
+        search: `?keywords=${wordEntered}&pageNo=1&pageSize=3`,
       });
       setWordEntered("");
     }
-  }
-  
+  };
+
   const clearInput = () => {
     setFilteredData([]);
     setWordEntered("");
   };
-    
-  
+
   const useClickOutside = (handler) => {
     const domNode = useRef();
 
@@ -197,7 +210,6 @@ function MiddleHeader() {
 
   const domNode = useClickOutside(() => {
     setSidebar(false);
-
   });
   //-----------------------------
 
@@ -228,28 +240,27 @@ function MiddleHeader() {
               onKeyDown={handleEnter}
             />
             <div>
-                <button
-                  type="button"
-                  className="btn btn-default btn-lg"
-                  onClick={handleSearch}
-                >
-                  <i className="fa fa-search"></i>
-                </button>
+              <button
+                type="button"
+                className="btn btn-default btn-lg"
+                onClick={handleSearch}
+              >
+                <i className="fa fa-search"></i>
+              </button>
             </div>
-                    {filteredData.length != 0 && (
-                        <div className="SearchResult" >
-                          {filteredData.slice(0, 15).map((value, key) => {
-                            return (
-                              <div className="dataItem">
-                                <Link to={`/products/${value.slug}`}>
-                                {value.TenSanPham}
-                              </Link>
-                                
-                              </div>
-                            );
-                          })}
-                        </div>
-                      )}
+            {filteredData.length != 0 && (
+              <div className="SearchResult">
+                {filteredData.slice(0, 15).map((value, key) => {
+                  return (
+                    <div className="dataItem">
+                      <Link to={`/products/${value.slug}`}>
+                        {value.TenSanPham}
+                      </Link>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
           </div>
 
           <div ref={domNode} className="header_cart_desktop">
@@ -266,16 +277,17 @@ function MiddleHeader() {
               <div className="cart-total">
                 <div>Giỏ hàng</div>
                 <div className="cart-total-info space-x-1">
-                  <div>
-                    {cartTotalQuantity} sản phẩm
-                  </div>
+                  <div>{cartTotalQuantity} sản phẩm</div>
                   <p>-</p>
                   <div>{formatCurrency(cartTotalAmount)}</div>
                 </div>
               </div>
             </button>
             <nav className={sidebar ? "nav-cart active" : "nav-cart"}>
-              <ul className="nav-cart-items" onClick={() => setSidebar((sidebar) => !sidebar)} >
+              <ul
+                className="nav-cart-items"
+                onClick={() => setSidebar((sidebar) => !sidebar)}
+              >
                 <li>
                   {cartTotalAmount === 0 ? (
                     <div className=" text-center">
@@ -307,7 +319,7 @@ function MiddleHeader() {
                         <tbody>
                           {cart.cartItems &&
                             cart.cartItems.length &&
-                            cart.cartItems?.map((cartItem,id) => (
+                            cart.cartItems?.map((cartItem, id) => (
                               <tr key={id} className="mx-auto">
                                 <th className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left text-blueGray-700 ">
                                   <img
@@ -316,10 +328,17 @@ function MiddleHeader() {
                                   />
                                 </th>
                                 <td className="capitalize-first border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 ">
-                                  <div className="">{cartItem?.TenSanPham.length>20?cartItem?.TenSanPham.substring(0,18) + '...' : cartItem?.TenSanPham}</div>
+                                  <div className="">
+                                    {cartItem?.TenSanPham.length > 20
+                                      ? cartItem?.TenSanPham.substring(0, 18) +
+                                        "..."
+                                      : cartItem?.TenSanPham}
+                                  </div>
                                 </td>
                                 <td className="border-t-0 px-6 align-center border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                                  {formatCurrency(cartItem?.DonGia)}
+                                  {cartItem.GiamGia > 0 ? (<div>
+                                    {formatCurrency(cartItem?.DonGia * (1- cartItem.GiamGia/100))}
+                                  </div>) : formatCurrency(cartItem?.DonGia)}
                                 </td>
                                 <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
                                   <span className="mx-2">
@@ -327,8 +346,18 @@ function MiddleHeader() {
                                   </span>
                                 </td>
                                 <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                                  {formatCurrency(
-                                    cartItem?.DonGia * cartItem?.cartQuantity
+                                  {cartItem.GiamGia > 0 ? (
+                                    <div>
+                                      {formatCurrency(
+                                        cartItem?.DonGia *
+                                          (1 - cartItem.GiamGia / 100) *
+                                          cartItem?.cartQuantity
+                                      )}
+                                    </div>
+                                  ) : (
+                                    formatCurrency(
+                                      cartItem?.DonGia * cartItem?.cartQuantity
+                                    )
                                   )}
                                 </td>
                                 <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"></td>
@@ -373,15 +402,14 @@ function MiddleHeader() {
 
 function BottomHeader() {
   const history = useHistory();
-  const [phone,setphone]=useState({});
+  const [phone, setphone] = useState({});
   useEffect(() => {
-        const fetchSetting = async () => {
-          const data = await getSettingById('setting-phone');
-              if(data&&data.data)
-                setphone(data.data);
-        };
-        fetchSetting();
-      }, []);
+    const fetchSetting = async () => {
+      const data = await getSettingById("setting-phone");
+      if (data && data.data) setphone(data.data);
+    };
+    fetchSetting();
+  }, []);
   function handleClick(currentRoute) {
     history.push("/" + currentRoute);
   }
@@ -439,7 +467,7 @@ function BottomHeader() {
             </div>
             Liên hệ:
             <a href="tel:+123-456-7890" style={{ color: "#fff" }}>
-              {phone&&(<p> + {phone.value}</p>)}
+              {phone && <p> + {phone.value}</p>}
             </a>
           </div>
         </div>

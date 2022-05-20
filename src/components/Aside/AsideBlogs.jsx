@@ -27,8 +27,6 @@ function Aside(props) {
   const { filter, handleChange, isCategory } = props;
   const [categoryList, setCategoryList] = useState([]);
 
-
-
   const handleChangeCategory = (value) => {
     console.log(filter);
     if (handleChange && isCategory) {
@@ -43,7 +41,7 @@ function Aside(props) {
   useEffect(() => {
     const decodeUrl = qs.parse(location.search.substring(1));
     const filter = decodeUrl["filter"];
-    console.log(filter, "test")
+    console.log(filter, "test");
     const fetchCategoryList = async () => {
       try {
         const params = {};
@@ -135,7 +133,18 @@ function Aside(props) {
                         </div>
                         <p className="price">
                           <span className="price-new">
-                            {formatCurrency(product.DonGia)}
+                            {product.GiamGia > 0 ? (
+                              <div>
+                                {formatCurrency(
+                                  product.DonGia * (1 - product.GiamGia / 100)
+                                )} <br />
+                                <span className="line-through ml-1 text-red-500">
+                                  {formatCurrency(product.DonGia)}
+                                </span>
+                              </div>
+                            ) : (
+                              formatCurrency(product.DonGia)
+                            )}{" "}
                           </span>
                         </p>
                       </div>
