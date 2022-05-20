@@ -99,7 +99,7 @@ function BlogSlide(props) {
             <i className="fa fa-angle-right"></i></button>
         </div></div>
         <Slider ref={slideRef}  {...settings} className="space">
-          {blogList.map((blog) => (
+          {blogList && blogList.length && blogList.map((blog) => (
           <div key={blog._id} className="px-4">
               <div className="bg-white relative" >
             <div className=" overflow-hidden" >
@@ -110,7 +110,7 @@ function BlogSlide(props) {
                 <div className="py-3 hover:text-yellow-400 text-xl"><Link to={`/blogs/${blog.slug}`} className="limit-text-1line">{blog.TieuDe}</Link></div>
                 <div className="py-1 mb-6 w-full">{blog.TomTat.length > 40 ? blog.TomTat.substring(0,40) + '...' : blog.TomTat}</div>
                 <div className="blog-group clearfix">	
-                    <Link to={`/blogs/${blog.slug}`} className="blog-read btn" title="Read More">ĐỌC THÊM</Link>
+                    <Link to={`/blogs/${blog?.slug}`} className="blog-read btn" title="Read More">ĐỌC THÊM</Link>
                 </div>
             </div>
         </div>
